@@ -1,0 +1,15 @@
+<form [formGroup]="directLoginForm" (ngSubmit)="directLogin()">
+  <input [formControlName]="'id'" 
+          type="text" 
+          placeholder="ID"><br>
+  <input [formControlName]="'password'" 
+          type="password" 
+          placeholder="Password"><br>
+  <button type="submit">Login</button>
+</form>
+<br><br><br>
+<button (click)="googleLogin()">Login with Google</button><br><br>
+<a (click)="callJoinPage()">Join</a><br>
+<div *ngIf="isWatch">
+  <app-sign></app-sign>
+</div>
