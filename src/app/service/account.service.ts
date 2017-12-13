@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 export class AccountService {
   private token: string;
   private logedIn: boolean;
+  private userInfo: {};
 
   constructor() {
     this.token = '';
@@ -18,8 +19,16 @@ export class AccountService {
     this.logedIn = state;
   }
 
+  setUserInfo(userInfo: {}) {
+    this.userInfo = userInfo;
+  }
+
   getToken(): string {
     return this.token;
+  }
+
+  getUserInfo(): {} {
+    return this.userInfo;
   }
 
   isLogedIn(): boolean {
@@ -29,5 +38,11 @@ export class AccountService {
     } else {
       return false;
     }
+  }
+
+  reset() {
+    this.token = '';
+    this.logedIn = false;
+    this.userInfo = {};
   }
 }

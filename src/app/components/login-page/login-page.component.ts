@@ -32,18 +32,27 @@ export class LoginPageComponent implements OnInit {
 
     // param이 아닌, query로 데이터를 받는 경우의 처리.
     const token = route.snapshot.queryParams['key'];
-    if (token !== undefined && token !== null) {
+    const uI = {
+                  id: route.snapshot.queryParams['id'],
+                  display_name: route.snapshot.queryParams['display_name']
+    };
+
+    if ( this.checkQueryData(token, uI) ) {
+      // console.log(`User id : ${id}, User Display Name : ${display_name}`);
       console.log('토큰 유효성을 체크합니다. token -> ' + token);
 
-      const jwtLogin = (observ) => {
+      http.get(SysConf.JWT_TOKEN_CHECK_ADDRESS + '?key=' + token)
+      .map(r => r.json())
+      .subscribe((observ) => {
         console.log(JSON.stringify(observ));
         if (observ !== undefined && observ !== null &&
           observ['loginResult'] === true && observ['key'] !== '') {
             aService.setToken(observ['key']);
             aService.setLogedIn(true);
+            aService.setUserInfo(uI);
             // TODO: 라우트 가드 설정하기.
             this.router.navigate([SysConf.MAIN_APP]);
-          } else {
+        } else {
           if (observ === undefined || observ === null) {
             console.log('접속 장애가 발생한 듯 합니다.');
           }
@@ -51,11 +60,7 @@ export class LoginPageComponent implements OnInit {
             console.log(observ['msg']);
           }
         }
-      };
-
-      http.get(SysConf.JWT_TOKEN_CHECK_ADDRESS + '?key=' + token)
-      .map( r => r.json() )
-      .subscribe(jwtLogin);
+      });
     }
   }
 
@@ -79,23 +84,49 @@ export class LoginPageComponent implements OnInit {
   // 기본 계정 로그인.
   directLogin() {
     const url = SysConf.DIRECT_LOGIN_ADDRESS +
-    '?id=' + this.directLoginForm.value['id'] + '&' +
-    'password=' + this.directLoginForm.value['password'];
+                '?id=' + this.directLoginForm.value['id'] + '&' +
+                'password=' + this.directLoginForm.value['password'];
     // console.log('기본 계정 로그인.' + url);
 
     this.http.get(url)
     .map( r => r.json() )
     .subscribe((obs) => {
       console.log(obs);
-      if (obs['loginResult'] === true && obs['key'] !== '' &&
-          obs['key'] !== undefined && obs['key'] !== null) {
+      if (this.checkResultData(obs)) {
             // TODO: 라우팅 가드 설정.
             this.aService.setToken(obs['key']);
             this.aService.setLogedIn(true);
+            this.aService.setUserInfo(obs['user_info']);
             this.router.navigate([SysConf.MAIN_APP]);
       } else {
         if (obs['loginResult'] === false) { console.log(obs['msg']); }
       }
     });
+  }
+
+  private checkResultData(obs): boolean {
+    const loginResult = obs['loginResult'];
+    const key = obs['key'];
+    const id = obs['user_info']['id'];
+    const dis_name = obs['user_info']['display_name'];
+
+    if (loginResult === true &&
+        key !== '' && key !== undefined && key !== null &&
+        id !== '' && id !== undefined && id !== null &&
+        dis_name !== '' && dis_name !== undefined && dis_name !== null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private checkQueryData(token, uI): boolean {
+    if (token !== undefined && token !== null &&
+        uI.id !== '' && uI.id !== undefined && uI.id !== null &&
+        uI.display_name !== '' && uI.display_name !== undefined && uI.display_name !== null) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

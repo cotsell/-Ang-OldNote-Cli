@@ -20,4 +20,8 @@ export class MainAppComponent implements OnInit {
   ngOnInit() {
   }
 
+  goback() {
+    this.aService.reset();
+    this.router.navigate(['/']);
+  }
 }

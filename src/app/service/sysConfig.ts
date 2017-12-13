@@ -6,6 +6,9 @@ export class SysConf {
   static DIRECT_LOGIN_ADDRESS = 'http://localhost:8000/account/login/direct';
   static DIRECT_SIGN_ADDRESS = 'http://localhost:8000/account/sign/direct';
 
+  static GET_PROJECT_LIST = 'http://localhost:8000/get/project_list';
+  static GET_SUBJECT_LIST = 'http://localhost:8000/get/subject_list';
+
   // Client URLs
   static BASIC_ADDRESS = 'http://localhost:4200';
   static MAIN_APP = '/projects';

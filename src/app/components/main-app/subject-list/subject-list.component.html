@@ -1,0 +1,4 @@
+<div *ngFor="let subject of subjectList">
+  <span>{{ subject.title }}</span><br>
+  <app-item [items]="subject.items"></app-item><br><br>
+</div>

@@ -1,3 +1,6 @@
 <p>
-  project-list works!
+  project-list works!<br>
 </p>
+  <div *ngFor="let project of projectList">
+    <app-project [project] = "project"></app-project>
+  </div>
