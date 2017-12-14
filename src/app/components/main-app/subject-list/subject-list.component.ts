@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Http } from '@angular/http';
 import { AccountService } from '../../../service/account.service';
 import { SysConf } from '../../../service/sysConfig';
+import { GaterService } from '../../../service/gater.service';
 
 // interface Subjects {
 
@@ -12,6 +13,7 @@ import { SysConf } from '../../../service/sysConfig';
   selector: 'app-subject-list',
   templateUrl: './subject-list.component.html',
   styleUrls: ['./subject-list.component.css']
+  // providers: [GaterService]
 })
 export class SubjectListComponent implements OnInit {
   projectId: string;
@@ -19,12 +21,14 @@ export class SubjectListComponent implements OnInit {
 
   constructor(private aService: AccountService,
               private route: ActivatedRoute,
-              private http: Http) {
+              private http: Http,
+              private Gater: GaterService) {
     this.projectId = route.snapshot.params['id'];
   }
 
   ngOnInit() {
     this.getSubjectList();
+    this.Gater.takeEvent.subscribe(this.divEvent);
   }
 
   private getSubjectList() {
@@ -33,11 +37,23 @@ export class SubjectListComponent implements OnInit {
                   'id=' + this.projectId)
     .map(r => r.json())
     .subscribe( obs => {
-      // this.subjectList = obs;
-      // console.log(JSON.stringify(this.subjectList));
       this.subjectList = this.organize(obs);
     });
 
+  }
+
+  divEvent = obs => {
+    console.log(obs);
+    if (obs['command'] === 'start') {
+      for (let i = 0; i < this.subjectList.length; i++) {
+        for (let j = 0; j < this.subjectList[i]['items'].length; j++) {
+          if (this.subjectList[i]['items'][j]['_id'] === obs['item_id']) {
+            this.Gater.giveEvent.emit(this.subjectList[i]['items'][j]);
+            console.log(this.subjectList[i]['items'][j]);
+          }
+        }
+      }
+    }
   }
 
   organize(json) {

@@ -1,3 +1,19 @@
-<p>
-  item-detail works!
-</p>
+<div>
+  <div *ngIf="isEditTitle">
+    Title : <input type="text" [value]="item.title" (input)="isEditTitle = false;">
+  </div>
+  <div *ngIf="!isEditTitle">
+      Title : <a (click)="isEditTitle = true;">{{ item.title }}</a>
+  </div>
+</div>
+
+<div>
+  <div *ngIf="isEditText">
+    Message : <textarea rows="10" cols="50">{{ item.text }}</textarea><br>
+    <button (click)="saveText($event)">Save</button>
+  </div>
+  <div *ngIf="!isEditText">
+    Message : <a (click)="isEditText = true;">{{ item.text }}</a>
+  </div>
+</div>
+
