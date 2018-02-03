@@ -1,0 +1,27 @@
+.main_grid {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    width: 100%;
+}
+
+.input_tag_box {
+    border: none;
+    border-bottom: 2px solid #4d4d4d;
+    padding: 3px;
+    color: #4d4d4d;
+}
+
+.tag {
+    float: left;
+    border: 0px;
+    border-radius: 2px;
+    padding-top: 1px;
+    padding-bottom: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    color: #4d4d4d;
+}

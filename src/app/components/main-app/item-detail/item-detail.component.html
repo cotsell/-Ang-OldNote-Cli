@@ -1,19 +1,70 @@
-<div>
-  <div *ngIf="isEditTitle">
-    Title : <input type="text" [value]="item.title" (input)="isEditTitle = false;">
+<div id="main_grid" (click)="focusOutManage($event)">
+  <!-- toolbar -->
+  <div id="toolbar_grid">
+    <app-toolbar></app-toolbar>
   </div>
-  <div *ngIf="!isEditTitle">
-      Title : <a (click)="isEditTitle = true;">{{ item.title }}</a>
+  <!-- Fast Mini List -->
+  <div>
+    <app-fast-minilist 
+      [fastList]="fastList"
+      [order]="orderChild"
+      (output)="receiveOutput($event)">
+    </app-fast-minilist>
   </div>
-</div>
 
-<div>
-  <div *ngIf="isEditText">
-    Message : <textarea rows="10" cols="50">{{ item.text }}</textarea><br>
-    <button (click)="saveText($event)">Save</button>
+  <!-- Item Detail -->
+  <div id="item_detail_div">
+    <!-- Title -->
+    <div style="margin-bottom: 14px;">
+      <!-- 타이틀 수정 화면 -->
+      <div [hidden]="!isEditTitle">
+        <form [formGroup]="titleForm">
+          <input #MyTitle 
+                  name="title"
+                  class="title_input_text"
+                  type="text" 
+                  [formControlName]="'title'" 
+                  [value]="item?.title" 
+                  (keypress)="saveTitle($event)">
+          <template *ngIf="isEditTitle;then focusOnElement(MyTitle)"></template>
+        </form>
+      </div>
+      <!-- 타이틀 기본 표시 화면 -->
+      <div [hidden]="isEditTitle">
+          <a (click)="isEditTitle=true;" id="title_text" name="title">{{ item?.title }}</a>
+      </div>
+    </div>
+    <!-- Textarea -->
+    <div>
+      <!-- 내용 수정 화면 -->
+      <div [hidden]="!isEditText">
+        <form [formGroup] = "textForm" >
+          <textarea #MyTextarea 
+                    name="text"
+                    class="text_area"
+                    [class.text_area]="true"
+                    [formControlName]="'textarea'" 
+                    [value]="item?.text ? item.text : ''" 
+                    ></textarea><br>
+          <button class="save_button"
+                  (click)="saveText($event)">Save</button>
+          <template *ngIf="isEditText;then focusOnElement(MyTextarea)"></template>
+        </form>
+      </div>
+      <!-- 내용 기본 화면 -->
+      <div [hidden]="isEditText">
+        <pre (click)="isEditText=true;"
+              id="text_area"
+              name="text"
+              >{{ item?.text ? item.text : 'Click here to insert new text' }}</pre>
+      </div>
+    </div>
+    <!-- Tag -->
+    <div>
+      <app-tag [tagList]="item?.tags" (outTagList)="receiveTagList($event)"></app-tag>
+    </div>
   </div>
-  <div *ngIf="!isEditText">
-    Message : <a (click)="isEditText = true;">{{ item.text }}</a>
-  </div>
-</div>
 
+  <!-- Right empty space -->
+  <div></div>
+</div>

@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import { IUser } from './Interface';
 
 @Injectable()
 export class AccountService {
   private token: string;
   private logedIn: boolean;
-  private userInfo: {};
+  private userInfo: IUser;
 
   constructor() {
     this.token = '';
@@ -19,7 +20,7 @@ export class AccountService {
     this.logedIn = state;
   }
 
-  setUserInfo(userInfo: {}) {
+  setUserInfo(userInfo: IUser) {
     this.userInfo = userInfo;
   }
 
@@ -27,7 +28,7 @@ export class AccountService {
     return this.token;
   }
 
-  getUserInfo(): {} {
+  getUserInfo(): IUser {
     return this.userInfo;
   }
 

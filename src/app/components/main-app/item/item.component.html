@@ -1,3 +1,38 @@
-<div *ngFor="let item of items">
-  <span><a [routerLink]="['/projects/item', item._id]">{{ item.title }}</a></span>
+<div>
+    <!-- 새로운 아이템 입력 모드 -->
+    <div *ngIf="isNewItem === true"
+        class="left_label red">
+        <!-- 입력하라고 멘트 출력 -->
+        <div [hidden]="isInsertMode">
+            <span (click)="isInsertMode = true"
+                    id="insert_msg">
+                Insert New Item..
+        </span>
+        </div>
+        <!-- 아이템 입력 활성화 모드 -->
+        <div [hidden]="!isInsertMode">
+            <input #title
+                    type="text" 
+                    placeholder="Insert a title of new item"
+                    (focusout)="isInsertMode = false;"
+                    (keypress)="sendNewItem($event)">
+            <template *ngIf="isInsertMode === true;then focusOn(title)"></template>
+        </div>
+    </div>
+    <!-- 기존 입력된 아이템 내용 출력 모드 -->
+    <div *ngIf="isNewItem === false"
+            (mouseover)="orderShowMiniMenuButton()"
+            (mouseout)="orderHideMiniMenuButton()"
+            >
+        <div class="left_label">
+            <a [routerLink]="['/projects/item', item._id]">{{ item.title }}</a>
+        </div>
+        <div style="display: inline-block;">
+            <app-minimenu [order]="orderChild"
+                        [object]="{ request: 'Item', object: item }"
+                        (output)="Output($event)"
+                        >
+            </app-minimenu>
+        </div>
+    </div>
 </div>

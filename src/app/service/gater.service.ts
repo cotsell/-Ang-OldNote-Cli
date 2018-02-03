@@ -10,6 +10,7 @@ export class GaterService {
   takeEvent: EventEmitter<any> = new EventEmitter();
 
   constructor() {
+    // console.log('Gater Service!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
   }
 
 }

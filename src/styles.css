@@ -1,1 +1,32 @@
 /* You can add global styles to this file, and also import other style files */
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #e6e6e6;
+}
+
+.def_background_color {
+    background-color: #e6e6e6;
+}
+
+.def_font_color {
+    color: #4d4d4d;
+}
+
+.def_div:hover {
+    background-color: #d9d9d9;
+}
+
+.def_line_color {
+    border-color: #4d4d4d;
+}
+
+.def_box_color {
+    background-color: #bfbfbf;
+}
+
+.def_box_color:hover {
+    background-color: #a6a6a6;
+}

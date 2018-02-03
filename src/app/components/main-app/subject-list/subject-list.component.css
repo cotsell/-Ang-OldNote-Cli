@@ -1,0 +1,20 @@
+#main_grid {
+    display: grid;
+    grid-template-columns: 250px 1fr 20px;
+    grid-template-rows: 40px 1fr;
+    width: 100%;
+    height: 100%;
+    background-color: #e6e6e6;
+}
+
+#toolbar_div {
+    grid-column: 1 / 4;
+}
+
+#fast_input_div {
+    justify-self: center;
+}
+
+#subject_list_div {
+    margin-bottom: 10px;
+}

@@ -1,0 +1,17 @@
+<div class="main_grid def_font_color">
+  <!-- Input textbox -->
+  <div>
+    <input type="text"
+            class="input_tag_box def_background_color"
+            placeholder="Input tag the server will memorise.."
+            (keypress)="insertTag($event)"
+    >
+  </div>
+  <!-- Tag lists -->
+  <div>
+    <div class="tag def_background_color"
+          *ngFor="let tag of tagList;">
+          {{ tag }}
+    </div>
+  </div>
+</div>

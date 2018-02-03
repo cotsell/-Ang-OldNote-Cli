@@ -1,0 +1,10 @@
+<div id="main">
+  <div *ngFor="let fast of fastList">
+    <app-fast-input 
+      [item]="fast"
+      [order]="orderChild"
+      (output)="receiveOutput($event)"
+      [isFoldPage]="true"
+      [readOnly]="true"></app-fast-input>
+  </div>
+</div>

@@ -1,6 +1,18 @@
-<p>
-  project-list works!<br>
-</p>
-  <div *ngFor="let project of projectList">
-    <app-project [project] = "project"></app-project>
+<div class="def_background_color" id="main_grid" (click)="orderChildEvent($event)">
+  <div>
+    <div>
+        <app-toolbar></app-toolbar>
+    </div>
+    
+    <div *ngFor="let project of projectList" style="display:inline-block;" >
+      <app-project  [project] = "project"
+                    [isEditable]="false"
+                    (output)="receiveRequest($event)"
+                    [order]="orderChild"
+                    ></app-project>
+    </div>
+    <div style="display:inline-block;">
+      <app-project [isNewMode]="true" (output)="receiveRequest($event)"></app-project>
+    </div>
   </div>
+</div>

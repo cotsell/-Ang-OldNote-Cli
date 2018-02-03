@@ -1,21 +1,29 @@
-<br><br>
-<form [formGroup]="directSignForm" (ngSubmit)="directSign()">
-  <h1>Direct Sign</h1>
-  E-mail : <input [formControlName]="'id'" 
-                  type="text" 
-                  placeholder="Your Email Address"><br>
-  Display Name: <input [formControlName]="'display_name'"
-                        type="text"
-                        placeholder="Display Name"><br>
-  Password : <input [formControlName]="'password'" 
-                    type="password" 
-                    placeholder="Your password"><br>
-  confirm password : <input [formControlName]="'confirm_password'" 
-                            type="password" 
-                            placeholder="confirm your password"><br>
-  <button type="submit">Sign</button>
-</form>
-
-<br><br>
-<button (click)="signWithGoogleId()">Sign with Google</button>
-
+<h1 class="def_font_color">Direct Sign</h1>
+<div id="main_grid">
+  <div></div>
+  <div>
+    <form [formGroup]="directSignForm">
+      <input [formControlName]="'id'" 
+              class="edit_box"
+              type="text" 
+              placeholder="Your Email Address"><br>
+      <input [formControlName]="'display_name'"
+              class="edit_box"
+              type="text"
+              placeholder="Display Name"><br>
+      <input [formControlName]="'password'" 
+              class="edit_box"
+              type="password" 
+              placeholder="Your password"><br>
+      <input [formControlName]="'confirm_password'" 
+              class="edit_box"
+              type="password" 
+              placeholder="confirm your password"><br>
+      <div style="text-align: center;">
+        <button class="sign_button" (click)="directSign()">Sign</button>
+        <button class="google_sign_button" (click)="signWithGoogleId()">Sign with Google</button>
+      </div>
+    </form>    
+  </div>
+  <div></div>
+</div>

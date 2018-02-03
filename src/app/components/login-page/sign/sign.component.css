@@ -1,0 +1,51 @@
+#main_grid {
+    display: grid;
+    height: 100%;
+    width: 100%;
+    grid-template-columns: 1fr 250px 1fr;
+}
+
+.edit_box {
+    border: none;
+    width: 200px;
+    color: #4d4d4d;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-color: #4d4d4d;
+    background-color: #e6e6e6;
+    margin: 10px;
+}
+
+.sign_button {
+    border: 1px solid #4d4d4d;
+    background-color: #e6e6e6;
+    color: #4d4d4d;
+    text-align: center;
+    font-size: 14px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 2px;
+}
+
+.sign_button:hover {
+    background-color: #8c8c8c;
+}
+
+.google_sign_button {
+    border: 1px solid #4d4d4d;
+    background-color: #e6e6e6;
+    color: #4d4d4d;
+    text-align: center;
+    font-size: 14px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 2px;
+}
+
+.google_sign_button:hover {
+    background-color: #8c8c8c;
+}

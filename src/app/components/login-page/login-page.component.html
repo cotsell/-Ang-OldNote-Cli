@@ -1,15 +1,34 @@
-<form [formGroup]="directLoginForm" (ngSubmit)="directLogin()">
-  <input [formControlName]="'id'" 
-          type="text" 
-          placeholder="ID"><br>
-  <input [formControlName]="'password'" 
-          type="password" 
-          placeholder="Password"><br>
-  <button type="submit">Login</button>
-</form>
-<br><br><br>
-<button (click)="googleLogin()">Login with Google</button><br><br>
-<a (click)="callJoinPage()">Join</a><br>
-<div *ngIf="isWatch">
-  <app-sign></app-sign>
+<div id="main_grid">
+  <div class="def_background_color"></div>
+  <div id="inner_grid">
+    <div class="def_background_color"></div>
+    <div class="def_background_color" style="text-align: center">
+      <h1 class="def_font_color">Login</h1>
+      <form [formGroup]="directLoginForm" (ngSubmit)="directLogin()">
+        <input [formControlName]="'id'" 
+                class="edit_box"
+                type="email" 
+                autofocus
+                placeholder="Email">
+        <br>
+        <input [formControlName]="'password'"
+                class="edit_box"
+                type="password" 
+                placeholder="Password">
+        <br>
+        <br>
+        <button class="login_button" type="submit">Login</button>
+        <button (click)="googleLogin()" class="google_login_button">Login with Google</button>
+      </form>
+      <br><br>
+      <div style="text-align: right;">
+        <a class="def_font_color" (click)="callJoinPage()">to Join</a>
+      </div>
+      <!-- 가입하기 버튼을 누르면 보여줘요. -->
+      <div *ngIf="isWatch">
+        <app-sign></app-sign>
+      </div>
+    </div>
+  </div>
+  <div class="def_background_color"></div>
 </div>

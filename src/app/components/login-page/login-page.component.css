@@ -1,0 +1,69 @@
+#flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+#main_grid {
+    display: grid;
+    height: 100%;
+    width: 100%;
+    grid-template-columns: 1fr 400px 1fr;
+}
+
+#inner_grid {
+    display: grid;
+    grid-template-rows: 30px 1fr;
+}
+
+.edit_box {
+    border: none;
+    border-bottom-color: #4d4d4d;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    width: 300px;
+    font-size: 20px;
+    color: #4d4d4d;
+    background-color: #e6e6e6; 
+    padding: 10px 10px 4px 10px;
+    margin: 10px 10px 10px 10px;
+}
+
+.login_button {
+    border: 1px solid #4d4d4d;
+    background-color: #e6e6e6;
+    color: #4d4d4d;
+    text-align: center;
+    font-size: 16px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 2px;
+    transition-duration: 0.3s;
+    cursor: pointer;
+}
+
+.login_button:hover {
+    background-color: #8c8c8c;
+}
+
+.google_login_button {
+    border: 1px solid #4d4d4d;
+    background-color: #e6e6e6;
+    color: #4d4d4d;
+    text-align: center;
+    font-size: 16px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 2px;
+    transition-duration: 0.3s;
+    cursor: pointer;
+}
+
+.google_login_button:hover {
+    background-color: #8c8c8c;
+}

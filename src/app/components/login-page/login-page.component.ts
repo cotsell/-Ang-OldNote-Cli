@@ -5,6 +5,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { SysConf } from '../../service/sysConfig';
 import { AccountService } from '../../service/account.service';
 import 'rxjs/add/operator/map';
+import { IUser } from '../../service/Interface';
 
 @Component({
   selector: 'app-login-page',
@@ -20,8 +21,11 @@ export class LoginPageComponent implements OnInit {
     }
   );
 
-  constructor(private aService: AccountService, private http: Http,
-    private route: ActivatedRoute, private router: Router) {
+  // 구글 로그인을 시도하면 json이 아닌 Query로 사이트에 정보를 넘겨줘요.
+  constructor(private aService: AccountService,
+              private http: Http,
+              private route: ActivatedRoute,
+              private router: Router) {
     // 1. AccountService의 logedIn상태가 true면 곧바로 main-app으로 이동.
     // 2. '/'에 'key'쿼리가 존재하면, 토큰 유효성 체크하고 main-app으로 이동.
 
@@ -32,7 +36,7 @@ export class LoginPageComponent implements OnInit {
 
     // param이 아닌, query로 데이터를 받는 경우의 처리.
     const token = route.snapshot.queryParams['key'];
-    const uI = {
+    const uI: IUser = {
                   id: route.snapshot.queryParams['id'],
                   display_name: route.snapshot.queryParams['display_name']
     };
@@ -77,7 +81,7 @@ export class LoginPageComponent implements OnInit {
     .map( r => r.json() )
     .subscribe(observ => {
       console.log(observ);
-      window.location.replace(observ);
+      window.location.replace(observ['result']);
     });
   }
 
@@ -120,7 +124,7 @@ export class LoginPageComponent implements OnInit {
     }
   }
 
-  private checkQueryData(token, uI): boolean {
+  private checkQueryData(token, uI: IUser): boolean {
     if (token !== undefined && token !== null &&
         uI.id !== '' && uI.id !== undefined && uI.id !== null &&
         uI.display_name !== '' && uI.display_name !== undefined && uI.display_name !== null) {

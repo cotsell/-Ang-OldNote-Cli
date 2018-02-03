@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpModule } from '@angular/http';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { LoginPageComponent } from './components/login-page/login-page.component';
@@ -18,6 +19,16 @@ import { SubjectListComponent } from './components/main-app/subject-list/subject
 
 import { AccountService } from './service/account.service';
 import { GaterService } from './service/gater.service';
+import { NetworkService } from './service/network.service';
+import { SubjectComponent } from './components/main-app/subject/subject.component';
+import { FastInputComponent } from './components/main-app/fast-input/fast-input.component';
+import { TagComponent } from './components/main-app/tag/tag.component';
+import { MinimenuComponent } from './components/main-app/minimenu/minimenu.component';
+import { FastMinilistComponent } from './components/main-app/fast-minilist/fast-minilist.component';
+import { FastMenuComponent } from './components/main-app/minimenu-components/fast-menu/fast-menu.component';
+import { ProjectMenuComponent } from './components/main-app/minimenu-components/project-menu/project-menu.component';
+import { SubjectMenuComponent } from './components/main-app/minimenu-components/subject-menu/subject-menu.component';
+import { ItemMenuComponent } from './components/main-app/minimenu-components/item-menu/item-menu.component';
 
 const route: Routes = [
   { path: '', component: LoginPageComponent },
@@ -34,24 +45,34 @@ const route: Routes = [
 @NgModule({
   declarations: [
     AppComponent,
-    ToolbarComponent,
-    LoginPageComponent,
-    MainAppComponent,
-    ProjectListComponent,
-    ProjectComponent,
-    SignComponent,
+    Error404Component,
+    FastInputComponent,
+    FastMenuComponent,
+    FastMinilistComponent,
     ItemComponent,
     ItemDetailComponent,
+    LoginPageComponent,
+    MainAppComponent,
+    MinimenuComponent,
+    ProjectComponent,
+    ProjectListComponent,
+    SignComponent,
+    SubjectComponent,
     SubjectListComponent,
-    Error404Component
+    TagComponent,
+    ProjectMenuComponent,
+    SubjectMenuComponent,
+    ItemMenuComponent,
+    ToolbarComponent
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot(route),
     HttpModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
-  providers: [ AccountService, GaterService ],
+  providers: [ AccountService, GaterService, NetworkService ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

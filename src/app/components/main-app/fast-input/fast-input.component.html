@@ -1,0 +1,142 @@
+<!-- 읽기 전용 모드 아닐 때 -->
+<div 
+  *ngIf="readOnly === false"
+  class="round_div" 
+  (mouseover)="showMiniMenu()"
+  (mouseout)="hideMiniMenu()"
+  >
+  <div id="read_only_title_grid">
+
+    <!-- 타이틀 -->
+    <div id="read_only_title_div">
+      <div
+        id="title"
+        *ngIf="isEditTitle === false"
+        (click)="changeTitleMode($event)">
+        {{ item.title !== undefined && item.title !== '' ? item.title : 'Title' }}
+      </div>
+      <div
+        id="title"
+        *ngIf="isEditTitle === true">
+        <input 
+          type="text"
+          (focusout)="saveTitle($event)"
+          (click)="doNothing()">
+      </div>
+    </div>
+
+    <!-- 화살표 -->
+    <div (click)="isFoldPage = !isFoldPage;">
+      <div *ngIf="isFoldPage">Dn<!--<img id="arrow_img" [src]="'../assets/arrow_down.png'">--></div>
+      <div *ngIf="!isFoldPage">Up<!--<img id="arrow_img" [src]="'../assets/arrow_up.png'">--></div>
+    </div>
+
+    <!-- 미니 메뉴 -->
+    <div id="mini_menu_div">
+      <app-minimenu
+        [order]="orderChild"
+        [object]="{ request: 'Fast', object: item }"
+        (output)="receiveOutput($event)">
+      </app-minimenu>
+    </div>
+
+    <!-- 접히는 부분 -->
+    <div
+      [hidden]="isFoldPage"
+      id="read_only_fold_div">
+      <div id="main_grid">
+
+        <!-- Text Area -->  
+        <div id="text_area_div">
+          <div  
+            class="text_div"
+            [hidden]="isEditTextArea"
+            (click)="changeTextAreaMode()">
+            <pre id="pre">{{ item?.text ? item.text : 'Insert new text..' }}</pre>
+          </div>
+          <div  
+            class="text_div"
+            (click)="doNothing()"
+            [hidden]="!isEditTextArea">
+            <textarea 
+              #text id="edit_text" 
+              class="text_area"></textarea>
+          </div>
+        </div>
+
+        <!-- Tags -->
+        <div id="tag_div">
+          <app-tag 
+            [tagList]="item?.tags" 
+            (outTagList)="receiveTagList($event)">
+          </app-tag>
+        </div>
+
+        <!-- buttons -->
+        <div 
+          id="ok_button_div"
+          [hidden]="!isEditTextArea">
+          <button 
+            id="btn_save"
+            class="button left_button"
+            (click)="saveFast()">
+            Save
+          </button>
+        </div>
+        <div 
+          id="cancel_button_div"
+          [hidden]="!isEditTextArea">
+          <button 
+            id="btn_reset"
+            class="button right_button"
+            (click)="cancelFast()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 읽기 전용 모드 -->
+<div
+  *ngIf="readOnly === true"
+  class="round_div"
+  (mouseover)="showMiniMenu()"
+  (mouseout)="hideMiniMenu()"
+  >
+  <div id="read_only_title_grid">
+
+    <!-- 타이틀 -->
+    <div id="read_only_title_div">{{ item?.title }}</div>
+    
+    <!-- 화살표 -->
+    <div (click)="isFoldPage = !isFoldPage;">
+      <div *ngIf="isFoldPage">Dn<!--<img id="arrow_img" [src]="'../assets/arrow_down.png'">--></div>
+      <div *ngIf="!isFoldPage">Up<!--<img id="arrow_img" [src]="'../assets/arrow_up.png'">--></div>
+    </div>
+
+    <!-- 미니 메뉴 -->
+    <div id="read_only_mini_menu_div">
+      <app-minimenu
+        [order]="orderChild"
+        [object]="{ request: 'Fast', object: item }"
+        (output)="receiveOutput($event)">
+      </app-minimenu>
+    </div>
+    
+    <!-- 접히는 부분 -->
+    <div
+      [hidden]="isFoldPage"
+      id="read_only_fold_div">
+      <div id="read_only_main_grid">
+        <div id="read_only_textarea_div">
+          <pre id="pre">{{ item?.text }}</pre>
+        </div>
+        <div id="read_only_tag_div">
+          Tag
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

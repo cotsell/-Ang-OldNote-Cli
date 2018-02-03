@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { FormGroup, FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
+
 import { SysConf } from '../../../service/sysConfig';
 
 @Component({
@@ -18,7 +20,7 @@ export class SignComponent implements OnInit {
     }
   );
 
-  constructor(private http: Http) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit() {}
 
@@ -30,19 +32,18 @@ export class SignComponent implements OnInit {
     'display_name=' + this.directSignForm.value['display_name'];
     // console.log('다이렉트 가입' + url);
     this.http.get(url)
-    .map( r => r.json() )
     .subscribe(observ => {
       console.log(observ);
+      window.location.replace('/');
     });
   }
 
   signWithGoogleId() {
     // console.log('구글가입');
     this.http.get(SysConf.GOOGLE_SIGN_ADDRESS)
-    .map(r => r.json())
     .subscribe(observ => {
       console.log(observ);
-      window.location.replace(observ);
+      window.location.replace(observ['result']);
     });
   }
 }

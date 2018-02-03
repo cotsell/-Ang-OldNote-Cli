@@ -1,0 +1,65 @@
+.round_div {
+    position: relative;
+    border-radius:2px;
+    width: 250px;
+    height: 50px;
+    margin: 15px;
+    padding: 10px;
+}
+
+.round_div:hover {
+    background-color: #d9d9d9;
+}
+
+.no_edit_mode {
+    border: 1px solid #4d4d4d;
+}
+
+.no_edit_mode a:link {
+    text-decoration: none;
+    color: #4d4d4d;
+}
+
+.no_edit_mode a:visited {
+    text-decoration: none;
+    color: #4d4d4d;
+}
+
+.no_edit_mode a:hover {
+    text-decoration: none;
+    color: #4d4d4d;
+}
+
+.no_edit_mode a:active {
+    text-decoration: none;
+    color: #4d4d4d;
+}
+
+.new_mode {
+    border: 1px dashed #4d4d4d;
+    background-color: #e6e6e6;
+}
+
+.no_edit_mode a:link {
+    text-decoration: none;
+    color: #4d4d4d;
+    cursor: pointer;
+}
+
+.no_edit_mode a:visited {
+    text-decoration: none;
+    color: #4d4d4d;
+    cursor: pointer;
+}
+
+.no_edit_mode a:hover {
+    text-decoration: none;
+    color: #4d4d4d;
+    cursor: pointer;
+}
+
+.no_edit_mode a:active {
+    text-decoration: none;
+    color: #4d4d4d;
+    cursor: pointer;
+}
