@@ -3,41 +3,42 @@
   <div  #menu_layer 
         id="menu_div"
         [hidden]="true" >
-    <div id="inside_line">
-      <!-- Project menu -->
-      <div *ngIf="object?.request === 'Project'">
-        <app-project-menu 
-          [object]="object"
-          (output)="Output($event)">
-        </app-project-menu>
-      </div>
-      <!-- Subject menu -->
-      <div *ngIf="object?.request === 'Subject'">
-        <app-subject-menu
-          [object]="object"
-          (output)="Output($event)">
-        </app-subject-menu>
-      </div>
-      <!-- Item menu -->
-      <div *ngIf="object?.request === 'Item'">
-        <app-item-menu
-          [object]="object"
-          (output)="Output($event)">
-        </app-item-menu>
-      </div>
-      <!-- Fast menu -->
-      <div *ngIf="object?.request === 'Fast'">
-        <app-fast-menu
-          [object]="object"
-          (output)="Output($event)">
-        </app-fast-menu>
-      </div>
+    <!-- Project menu -->
+    <div *ngIf="object?.request === 'Project'">
+      <app-project-menu 
+        [object]="object"
+        (output)="Output($event)">
+      </app-project-menu>
+    </div>
+    <!-- Subject menu -->
+    <div *ngIf="object?.request === 'Subject'">
+      <app-subject-menu
+        [object]="object"
+        (output)="Output($event)">
+      </app-subject-menu>
+    </div>
+    <!-- Item menu -->
+    <div *ngIf="object?.request === 'Item'">
+      <app-item-menu
+        [object]="object"
+        (output)="Output($event)">
+      </app-item-menu>
+    </div>
+    <!-- Fast menu -->
+    <div *ngIf="object?.request === 'Fast'">
+      <app-fast-menu
+        [object]="object"
+        (output)="Output($event)">
+      </app-fast-menu>
     </div>
   </div>
   <!-- 미니메뉴 버튼 -->
-  <div  #menu_button [hidden]="true" 
-        id="hide_menu"
-        (click)="controlLayer($event, menu_layer)">
-        =
+  <div
+    #menu_button
+    [hidden]="true" 
+    id="hide_menu"
+    (click)="controlLayer($event, menu_layer)"
+    >
+    <i class="material-icons">more_vert</i>
   </div>
 </div>

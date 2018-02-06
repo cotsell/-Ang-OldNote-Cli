@@ -1,18 +1,26 @@
 <div id="main_grid">
+
   <!-- 뒤로가기 버튼 -->
-  <div (click)="goback()">Back</div>
+  <div id="arrow" (click)="goback()">
+    <i class="material-icons">arrow_back</i>
+  </div>
+
   <!-- 프로젝트 이름 -->
-  <div>
-    <app-project  
+  <div id="project">
+    <app-project
       [project]="project"
       [isEditable]="true">
       <!--
       [order]="orderChild"
       (output)="receiveRequest($event)"> -->
     </app-project>
-    </div>
-    <!-- 타이틀 -->
-    <div id="title">Project Note</div>
-    <!-- 유저 프로필 -->
-    <div id="user" class="def_font_color">{{ aService.getUserInfo().display_name }}</div>
+  </div>
+
+  <!-- 타이틀 -->
+  <div id="title">Project Note</div>
+
+  <!-- 유저 프로필 -->
+  <div id="user" class="def_font_color">
+    {{ aService.getUserInfo().display_name }}
+  </div>
 </div>

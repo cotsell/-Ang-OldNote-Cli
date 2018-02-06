@@ -1,24 +1,24 @@
 .main_div {
     display: inline-block;
     position: relative;
-    border: 1px solid red;
-    width: 15px;
-    height: 15px;
+    border: 0px solid red;
+    /* width: 15px;
+    height: 15px; */
 }
 #hide_menu {
     cursor: pointer;
-}
-
-#inside_line {
-    border: 1px solid #4d4d4d;
 }
 
 #menu_div {
     position: absolute;
     right: 30px;
     width: 150px;
-    padding: 4px;
+    padding: 1rem;
 
     border: 1px solid #4d4d4d;
     background-color: #e6e6e6;
+}
+
+.icon_size {
+    font-size: 1rem;
 }

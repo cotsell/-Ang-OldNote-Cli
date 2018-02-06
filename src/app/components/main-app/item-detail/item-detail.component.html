@@ -5,7 +5,7 @@
   </div>
   <!-- Fast Mini List -->
   <div>
-    <app-fast-minilist 
+    <app-fast-minilist
       [fastList]="fastList"
       [order]="orderChild"
       (output)="receiveOutput($event)">
@@ -19,12 +19,12 @@
       <!-- 타이틀 수정 화면 -->
       <div [hidden]="!isEditTitle">
         <form [formGroup]="titleForm">
-          <input #MyTitle 
+          <input #MyTitle
                   name="title"
                   class="title_input_text"
-                  type="text" 
-                  [formControlName]="'title'" 
-                  [value]="item?.title" 
+                  type="text"
+                  [formControlName]="'title'"
+                  [value]="item?.title"
                   (keypress)="saveTitle($event)">
           <template *ngIf="isEditTitle;then focusOnElement(MyTitle)"></template>
         </form>
@@ -39,12 +39,12 @@
       <!-- 내용 수정 화면 -->
       <div [hidden]="!isEditText">
         <form [formGroup] = "textForm" >
-          <textarea #MyTextarea 
+          <textarea #MyTextarea
                     name="text"
                     class="text_area"
                     [class.text_area]="true"
-                    [formControlName]="'textarea'" 
-                    [value]="item?.text ? item.text : ''" 
+                    [formControlName]="'textarea'"
+                    [value]="item?.text ? item.text : ''"
                     ></textarea><br>
           <button class="save_button"
                   (click)="saveText($event)">Save</button>
@@ -52,11 +52,12 @@
         </form>
       </div>
       <!-- 내용 기본 화면 -->
-      <div [hidden]="isEditText">
-        <pre (click)="isEditText=true;"
-              id="text_area"
-              name="text"
-              >{{ item?.text ? item.text : 'Click here to insert new text' }}</pre>
+      <div [hidden]="isEditText" style="word-break: break-all;">
+        <span
+          (click)="isEditText = true;"
+          name="text"
+          [innerHTML]="item?.text ? parseMarkdownToHtml(item.text) : 'Click here to insert new text'">
+        </span>
       </div>
     </div>
     <!-- Tag -->

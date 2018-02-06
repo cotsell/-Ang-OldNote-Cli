@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup, FormControl } from '@angular/forms';
+import * as marked from 'marked';
 
 import { GaterService } from '../../../service/gater.service';
 import { SysConf } from '../../../service/sysConfig';
@@ -39,6 +40,7 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
               private aService: AccountService,
               private network: NetworkService) {
     this.itemId = router.snapshot.params['id'];
+    this.settingMakred();
   }
 
   ngOnInit() {
@@ -149,6 +151,29 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
         this.getFast();
         break;
     }
+  }
+
+  private settingMakred() {
+    marked.setOptions({
+      renderer: new marked.Renderer(),
+      gfm: true,
+      tables: true,
+      breaks: true,
+      pedantic: false,
+      sanitize: true,
+      smartLists: true,
+      smartypants: false,
+      xhtml: false
+    });
+  }
+
+  private parseMarkdownToHtml(text: string) {
+    const myRenderer = new marked.Renderer();
+    myRenderer.blockquote = function (value): string {
+      return '<blockquote style="margin: 10px !important;">' + value + '</blockquote>';
+    };
+    console.log(marked(text, { renderer: myRenderer }));
+    return marked(text, { renderer: myRenderer });
   }
 
   ngOnDestroy() {
