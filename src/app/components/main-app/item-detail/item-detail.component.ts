@@ -1,8 +1,10 @@
-import { Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup, FormControl } from '@angular/forms';
 import * as marked from 'marked';
+import * as prism from 'prismjs';
+import { Observable } from 'rxJs';
 
 import { GaterService } from '../../../service/gater.service';
 import { SysConf } from '../../../service/sysConfig';
@@ -17,23 +19,34 @@ import { IItem } from '../../../service/Interface';
 })
 export class ItemDetailComponent implements OnInit, OnDestroy {
   itemId;
-  item: IItem;
+  _item: IItem;
   tags: string[] = [];
   fastList: IItem[];
   orderChild: EventEmitter<any> = new EventEmitter();
+  isEditText = false;
+  isEditTitle = false;
+
+  @ViewChild('target') target: ElementRef;
+
+  set item(value) {
+    this._item = value;
+    this.change();
+  }
+  get item() {
+    return this._item;
+  }
 
   textForm: FormGroup = new FormGroup(
     {
       textarea: new FormControl()
     }
   );
+
   titleForm: FormGroup = new FormGroup(
     {
       title: new FormControl()
     }
   );
-  isEditText = false;
-  isEditTitle = false;
 
   constructor(private router: ActivatedRoute,
               private http: HttpClient,
@@ -44,7 +57,6 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // this.getItem();
     this.network.getItem(this.itemId)
     .subscribe(obs => {
       this.item = obs;
@@ -65,7 +77,7 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
   // Textarea의 내용은 <textarea>내에서 줄바꿈을 할 수 있어야 하므로,
   // 엔터를 눌렀을 때 수정하지 않고, 따로 수정 버튼을 누르도록 정했어요.
   saveText($event) {
-    this.item.text = this.textForm.value['textarea'];
+    this.item = Object.assign({}, this.item, { text: this.textForm.value['textarea'] });
     this.isEditText = false;
     // console.log(`EVENT!! : ` + this.textForm.value);
     this.http.put(SysConf.UPDATE_ITEM + '?' +
@@ -125,8 +137,7 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
 
   // 해당 item의 tag와 project_id를 참조해서, FastInput들을 가져와요.
   getFast() {
-    this.network.getFast(
-      {
+    this.network.getFast({
         project_id: this.item.project_id,
         tags: this.item.tags
       }
@@ -172,8 +183,17 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
     myRenderer.blockquote = function (value): string {
       return '<blockquote style="margin: 10px !important;">' + value + '</blockquote>';
     };
-    console.log(marked(text, { renderer: myRenderer }));
+    // myRenderer.code = function (value, language): string {
+    //   return `<pre style="white-space: pre;"><code class="language-${language}">${value}</code></pre>`;
+    //   // return `<pre style="white-space: pre;" class="language-${language}">${value}</pre>`;
+    // };
+    // console.log(marked(text, { renderer: myRenderer }));
     return marked(text, { renderer: myRenderer });
+  }
+
+  change() {
+    this.target.nativeElement.innerHTML = this.item.text ? this.parseMarkdownToHtml(this.item.text) : 'Click here To insert new text.';
+    prism.highlightAllUnder(this.target.nativeElement);
   }
 
   ngOnDestroy() {

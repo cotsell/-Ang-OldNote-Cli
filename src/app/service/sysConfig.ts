@@ -1,6 +1,7 @@
 export class SysConf {
   // Server URLs
-  static ADDRESS_BASIC = 'http://localhost:8000';
+  static LOCAL_HOST = '192.168.219.101';
+  static ADDRESS_BASIC = 'http://' + SysConf.LOCAL_HOST + ':8000';
   static JWT_TOKEN_CHECK_ADDRESS = SysConf.ADDRESS_BASIC + '/account/check';
   static GOOGLE_LOGIN_ADDRESS = SysConf.ADDRESS_BASIC + '/account/login/google';
   static GOOGLE_SIGN_ADDRESS = SysConf.ADDRESS_BASIC + '/account/sign/google';
@@ -29,7 +30,7 @@ export class SysConf {
   static DELETE_FAST = SysConf.ADDRESS_BASIC + '/delete/fast';
 
   // Client URLs
-  static BASIC_ADDRESS = 'http://localhost:4200';
+  static BASIC_ADDRESS = 'http://' + SysConf.LOCAL_HOST + ':8001';
   static MAIN_APP = '/projects';
 
   // @Output request commands.

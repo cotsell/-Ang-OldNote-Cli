@@ -53,16 +53,19 @@
       </div>
       <!-- 내용 기본 화면 -->
       <div [hidden]="isEditText" style="word-break: break-all;">
-        <span
+        <span #target
           (click)="isEditText = true;"
           name="text"
-          [innerHTML]="item?.text ? parseMarkdownToHtml(item.text) : 'Click here to insert new text'">
+          >
         </span>
       </div>
     </div>
     <!-- Tag -->
     <div>
-      <app-tag [tagList]="item?.tags" (outTagList)="receiveTagList($event)"></app-tag>
+      <app-tag
+        [tagList]="item?.tags"
+        (outTagList)="receiveTagList($event)">
+      </app-tag>
     </div>
   </div>
 
