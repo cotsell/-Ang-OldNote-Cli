@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { HttpModule } from '@angular/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { StoreModule } from '@ngrx/store';
 
 import { AppComponent } from './app.component';
 import { LoginPageComponent } from './components/login-page/login-page.component';
@@ -29,6 +30,8 @@ import { FastMenuComponent } from './components/main-app/minimenu-components/fas
 import { ProjectMenuComponent } from './components/main-app/minimenu-components/project-menu/project-menu.component';
 import { SubjectMenuComponent } from './components/main-app/minimenu-components/subject-menu/subject-menu.component';
 import { ItemMenuComponent } from './components/main-app/minimenu-components/item-menu/item-menu.component';
+
+import Reducers from './service/redux/reducers';
 
 const route: Routes = [
   { path: '', component: LoginPageComponent },
@@ -70,7 +73,8 @@ const route: Routes = [
     RouterModule.forRoot(route),
     HttpModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    StoreModule.forRoot({ itemDetail: Reducers.itemDetail.Reducer })
   ],
   providers: [ AccountService, GaterService, NetworkService ],
   bootstrap: [ AppComponent ]

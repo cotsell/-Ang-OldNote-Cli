@@ -19,19 +19,27 @@
       <!-- 타이틀 수정 화면 -->
       <div [hidden]="!isEditTitle">
         <form [formGroup]="titleForm">
-          <input #MyTitle
-                  name="title"
-                  class="title_input_text"
-                  type="text"
-                  [formControlName]="'title'"
-                  [value]="item?.title"
-                  (keypress)="saveTitle($event)">
-          <template *ngIf="isEditTitle;then focusOnElement(MyTitle)"></template>
+          <input 
+            #MyTitle
+            name="title"
+            class="title_input_text"
+            type="text"
+            [formControlName]="'title'"
+            [value]="item?.title"
+            (keypress)="saveTitle($event)"
+            (click)="clickedEditingTitle($event)"
+            >
         </form>
       </div>
       <!-- 타이틀 기본 표시 화면 -->
       <div [hidden]="isEditTitle">
-          <a (click)="isEditTitle=true;" id="title_text" name="title">{{ item?.title }}</a>
+          <a
+            id="title_text"
+            name="title"
+            (click)="clickedTitle();"
+            >
+            {{ item?.title }}
+          </a>
       </div>
     </div>
     <!-- Textarea -->
@@ -39,22 +47,23 @@
       <!-- 내용 수정 화면 -->
       <div [hidden]="!isEditText">
         <form [formGroup] = "textForm" >
-          <textarea #MyTextarea
-                    name="text"
-                    class="text_area"
-                    [class.text_area]="true"
-                    [formControlName]="'textarea'"
-                    [value]="item?.text ? item.text : ''"
-                    ></textarea><br>
+          <textarea
+            #MyTextarea
+            name="text"
+            class="text_area"
+            [class.text_area]="true"
+            [formControlName]="'textarea'"
+            [value]="item?.text ? item.text : ''"
+            (click)="clickedEditingText($event)"
+            ></textarea><br>
           <button class="save_button"
-                  (click)="saveText($event)">Save</button>
-          <template *ngIf="isEditText;then focusOnElement(MyTextarea)"></template>
+                  (click)="saveText(MyTextarea)">Save</button>
         </form>
       </div>
       <!-- 내용 기본 화면 -->
       <div [hidden]="isEditText" style="word-break: break-all;">
         <span #target
-          (click)="isEditText = true;"
+          (click)="clickedText($event)"
           name="text"
           >
         </span>

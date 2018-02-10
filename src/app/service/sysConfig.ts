@@ -1,6 +1,7 @@
 export class SysConf {
   // Server URLs
-  static LOCAL_HOST = '192.168.219.101';
+  // static LOCAL_HOST = '192.168.219.103';
+  static LOCAL_HOST = 'localhost';
   static ADDRESS_BASIC = 'http://' + SysConf.LOCAL_HOST + ':8000';
   static JWT_TOKEN_CHECK_ADDRESS = SysConf.ADDRESS_BASIC + '/account/check';
   static GOOGLE_LOGIN_ADDRESS = SysConf.ADDRESS_BASIC + '/account/login/google';

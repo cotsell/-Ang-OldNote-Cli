@@ -1,6 +1,6 @@
 #main_grid {
     display: grid;
-    grid-template-columns: 1fr 500px 1fr;
+    grid-template-columns: 1fr 768px 1fr;
     grid-template-rows: 40px 1fr;
     background-color: #e6e6e6;
     height: 100%;

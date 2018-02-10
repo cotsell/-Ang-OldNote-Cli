@@ -5,14 +5,12 @@ import { FormGroup, FormControl } from '@angular/forms';
 import * as marked from 'marked';
 import * as prism from 'prismjs';
 import { Observable } from 'rxJs';
-import { Store } from '@ngrx/store';
 
 import { GaterService } from '../../../service/gater.service';
 import { SysConf } from '../../../service/sysConfig';
 import { AccountService } from '../../../service/account.service';
 import { NetworkService } from '../../../service/network.service';
 import { IItem } from '../../../service/Interface';
-import * as StoreInfo from '../../../service/redux/storeInfo';
 
 @Component({
   selector: 'app-item-detail',
@@ -29,8 +27,6 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
   isEditTitle = false;
 
   @ViewChild('target') target: ElementRef;
-  @ViewChild('MyTextarea') textArea: ElementRef;
-  @ViewChild('MyTitle') title: ElementRef;
 
   set item(value) {
     this._item = value;
@@ -55,8 +51,7 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
   constructor(private router: ActivatedRoute,
               private http: HttpClient,
               private aService: AccountService,
-              private network: NetworkService,
-              private store: Store<StoreInfo.StoreInfo>) {
+              private network: NetworkService) {
     this.itemId = router.snapshot.params['id'];
     this.settingMakred();
   }
@@ -105,6 +100,29 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
     }
   }
 
+  // <input>엘리먼트에 포커스를 줍니다.
+  focusOnElement($event) {
+    $event.focus();
+  }
+
+  focusOutManage($event) {
+    // console.log($event);
+
+    this.clickEvent($event);
+
+    const tagName = $event['target']['tagName'];
+    const name = $event['target']['name'];
+
+    if (tagName === 'DIV' || tagName === 'FORM') {
+      this.isEditText = false;
+      this.isEditTitle = false;
+    } else if (tagName === 'A' && name === 'title') {
+      this.isEditText = false;
+    } else if (tagName === 'A' && name === 'text') {
+      this.isEditTitle = false;
+    }
+  }
+
   // Tag Component로부터 output되는 TagList를 받아와요.
   receiveTagList($event) {
     console.log($event);
@@ -131,58 +149,12 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
     );
   }
 
-  // -----------------------------------------------------------------------
-  // Events
-  // -----------------------------------------------------------------------
-
-  // <input>엘리먼트에 포커스를 줍니다.
-  focusOnElement($event) {
-    $event.focus();
-    // console.log($event);
-  }
-
-  // 빈 공간을 클릭했을 시에 발생하는 이벤트 처리.
-  focusOutManage($event) {
-    this.isEditText = false;
-    this.isEditTitle = false;
-    this.clickEvent($event);
-  }
-
-  // 자식 컴포넌트들에게 클릭이벤트 전달해요.
-  private clickEvent(event) {
+  clickEvent(event) {
+    // console.log(`ttttt`);
     this.orderChild.emit({ request: SysConf.CLICK_EVENT, object: event });
   }
 
-  private clickedTitle(evnet) {
-    event.stopPropagation();
-    this.isEditTitle = true;
-    this.isEditText = false;
-    setTimeout(() => this.title.nativeElement.focus(), 0);
-    this.clickEvent(event);
-  }
-
-  private clickedText(event) {
-    event.stopPropagation();
-    this.isEditText = true;
-    this.isEditTitle = false;
-    setTimeout(() => this.textArea.nativeElement.focus(), 0);
-    this.clickEvent(event);
-  }
-
-  private clickedEditingTitle(event) {
-    event.stopPropagation();
-    this.isEditText = false;
-    this.clickEvent(event);
-  }
-
-  private clickedEditingText(event) {
-    event.stopPropagation();
-    this.isEditTitle = false;
-    this.clickEvent(event);
-  }
-
-  // 차일드로부터 이벤트를 받아서 처리해요.
-  private receiveOutput(event) {
+  receiveOutput(event) {
     console.log(`item-detail.component.ts: receiveOutput(): `, event);
     switch (event.request) {
       case SysConf.GET_FAST_LIST_FROM_SERVER :
@@ -192,9 +164,6 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  // -----------------------------------------------------------------------
-  // MarkDown
-  // -----------------------------------------------------------------------
   private settingMakred() {
     marked.setOptions({
       renderer: new marked.Renderer(),
