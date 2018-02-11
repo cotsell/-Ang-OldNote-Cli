@@ -5,7 +5,8 @@
         class="round_div no_edit_mode def_background_color"
         (mouseover)="showMiniMenu()"
         (mouseout)="hideMiniMenu()">
-        <span><a [routerLink]="['./project', displayProject._id]">{{ displayProject.title }}</a></span>
+        <!-- <span><a [routerLink]="['./project', displayProject._id]">{{ displayProject.title }}</a></span> -->
+        <span><a [routerLink]="['./project', projectId]">{{ displayProject.title }}</a></span>
         <!-- 미니 메뉴 -->
         <div style="display: inline-block; position: absolute; top: 0px; right: 0px;">
             <app-minimenu   

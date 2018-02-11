@@ -2,8 +2,8 @@
 
   <!-- Toolbar -->
   <div id="toolbar_div">
-    <app-toolbar 
-      [project]="project" 
+    <app-toolbar
+      [projectId]="projectId"
       [order]="orderChild"
       (output)="receiveOutput($event)">
     </app-toolbar>
@@ -11,7 +11,7 @@
 
   <!-- Fast Input -->
   <div id="fast_input_div">
-    <app-fast-input 
+    <app-fast-input
       [project]="project"
       [order]="orderChild">
     </app-fast-input>
@@ -22,7 +22,7 @@
     <div
       id="subject_list_div"
       *ngFor="let subject of subjectList">
-      <app-subject  
+      <app-subject
         [subject]="subject"
         [project]="project"
         [order]="orderChild"

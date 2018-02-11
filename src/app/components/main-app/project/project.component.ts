@@ -16,7 +16,7 @@ import Reducers from '../../../service/redux/reducers';
   styleUrls: ['./project.component.css']
 })
 export class ProjectComponent implements OnInit, OnDestroy {
-  @Input() index = -1;
+  @Input() projectId: string;
   @Input() isEditable = false;
   @Input() isNewMode;
   @Input() order: EventEmitter<IOrderMsg>;
@@ -57,7 +57,10 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
     // 리덕스 구독
     this.projectSubription = this.store.select(getProjectList).subscribe(obs => {
-      this.project = obs[this.index];
+      this.project = obs.find(value => {
+        return value._id === this.projectId;
+        }
+      );
     });
   }
 

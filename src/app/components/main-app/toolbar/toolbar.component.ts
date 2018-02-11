@@ -12,7 +12,8 @@ import { SysConf } from '../../../service/sysConfig';
   styleUrls: ['./toolbar.component.css']
 })
 export class ToolbarComponent implements OnInit {
-@Input() project: IProject;
+@Input() projectId: string;
+
 @Input() order: EventEmitter<any>;
 @Output() output: EventEmitter<any> = new EventEmitter();
 orderChild: EventEmitter<any> = new EventEmitter();

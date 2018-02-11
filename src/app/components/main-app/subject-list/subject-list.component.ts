@@ -1,7 +1,10 @@
 import { Component, OnInit, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxJs';
 
+import { StoreInfo, getProjectList } from '../../../service/redux/storeInfo';
 import { AccountService } from '../../../service/account.service';
 import { IProject, IOrderMsg, IOutputMsg } from '../../../service/Interface';
 import { SysConf } from '../../../service/sysConfig';
@@ -15,15 +18,24 @@ export class SubjectListComponent implements OnInit {
   project: IProject = { _id: undefined, title: undefined, writer_id: undefined, num: undefined};
   subjectList;
   orderChild: EventEmitter<IOrderMsg> = new EventEmitter();
+  projectSubscription: Subscription;
+  projectId: string;
 
   constructor(private aService: AccountService,
               private route: ActivatedRoute,
-              private http: HttpClient) {
-    this.project._id = route.snapshot.params['id'];
+              private http: HttpClient,
+              private store: Store<StoreInfo>) {
+    // this.project._id = route.snapshot.params['id'];
   }
 
   ngOnInit() {
-    this.getProject();
+    this.projectId = this.route.snapshot.params['id'];
+    this.projectSubscription = this.store.select(getProjectList)
+      .subscribe(obs => {
+        this.project = obs.find(value => {
+          return value._id === this.projectId;
+        });
+      });
     this.getSubjectList();
   }
 
@@ -34,19 +46,6 @@ export class SubjectListComponent implements OnInit {
                   'id=' + this.project._id)
     .subscribe( obs => {
       this.subjectList = this.organize(obs);
-    });
-  }
-
-  // 서버로 프로젝트의 내용을 요청합니다.
-  private getProject() {
-    this.http.get(SysConf.GET_PROJECT + '?' +
-                  'key=' + this.aService.getToken() + '&' +
-                  'project_id=' + this.project._id)
-    .subscribe(obs => {
-      // console.log(obs);
-      this.project.title = obs['title'];
-      this.project.writer_id = obs['writer_id'];
-      this.project.num = obs['num'];
     });
   }
 
@@ -69,8 +68,9 @@ export class SubjectListComponent implements OnInit {
         this.getSubjectList();
         break;
 
+      // TODO 삭제 예정
       case SysConf.GET_PROJECT_LIST_FROM_SERVER :
-        this.getProject();
+        // this.getProject(); // TODO
         break;
     }
   }
