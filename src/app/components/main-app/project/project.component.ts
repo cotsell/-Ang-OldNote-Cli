@@ -1,24 +1,38 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxJs';
 
 import { IProject, IOutputMsg, IOrderMsg } from '../../../service/Interface';
 import { AccountService } from '../../../service/account.service';
 import { SysConf } from '../../../service/sysConfig';
+import { StoreInfo, getProjectList } from '../../../service/redux/storeInfo';
+import Reducers from '../../../service/redux/reducers';
 
 @Component({
   selector: 'app-project',
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.css']
 })
-export class ProjectComponent implements OnInit {
-  @Input() project: IProject = { _id: undefined, title: undefined, writer_id: undefined, num: undefined };
+export class ProjectComponent implements OnInit, OnDestroy {
+  @Input() index = -1;
   @Input() isEditable = false;
   @Input() isNewMode;
   @Input() order: EventEmitter<IOrderMsg>;
   @Output() output: EventEmitter<any> = new EventEmitter(); // 부모에게 요청할 때 사용해요.
   orderChild: EventEmitter<IOrderMsg> = new EventEmitter(); // 자식 컴포넌트에게 요청할때 사용해요.
   private isTitleEditMode = false;
+  private projectSubription: Subscription;
+  private displayProject: IProject;
+  private _project: IProject = { _id: undefined, title: undefined, writer_id: undefined, num: undefined };
+  set project(value) {
+    this._project = value;
+    this.displayProject = Object.assign({}, value);
+  }
+  get project() {
+    return this._project;
+  }
 
   private titleForm: FormGroup = new FormGroup(
     {
@@ -26,8 +40,10 @@ export class ProjectComponent implements OnInit {
     }
   );
 
-  constructor(private aService: AccountService, private http: HttpClient) {
-    this.project.title = 'Loading...';
+  constructor(private aService: AccountService,
+              private http: HttpClient,
+              public store: Store<StoreInfo>) {
+    // this.displayProject.title = 'Loading...';
   }
 
   ngOnInit() {
@@ -38,6 +54,11 @@ export class ProjectComponent implements OnInit {
         this.sendClickEventToChild(obs);
       });
     }
+
+    // 리덕스 구독
+    this.projectSubription = this.store.select(getProjectList).subscribe(obs => {
+      this.project = obs[this.index];
+    });
   }
 
   projectTitleEditMode() {
@@ -47,11 +68,15 @@ export class ProjectComponent implements OnInit {
   saveTitle($event) {
     if ($event['key'] === 'Enter') {
       this.isTitleEditMode = false;
-      this.project.title = $event.target.value;
+      // this.project.title = $event.target.value;
+      this.displayProject.title = $event.target.value;
       this.http.put(SysConf.UPDATE_PROJECT + '?' +
                     'key=' + this.aService.getToken(),
-                    { _id: this.project._id, title: this.project.title })
-      .subscribe(obs => { console.log(JSON.stringify(obs)); });
+                    { _id: this.displayProject._id, title: this.displayProject.title })
+        .subscribe(obs => {
+          console.log(JSON.stringify(obs));
+          this.store.dispatch(new Reducers.project.ModifyAct(this.displayProject));
+        });
     }
   }
 
@@ -97,6 +122,10 @@ export class ProjectComponent implements OnInit {
   // 화면에 켜져있는 작은 메뉴들을 화면에서 숨겨주는 함수에요.
   sendClickEventToChild(event: IOrderMsg) {
     this.orderChild.emit({ request: event.request, object: event.object });
+  }
+
+  ngOnDestroy() {
+    this.projectSubription.unsubscribe();
   }
 
 }

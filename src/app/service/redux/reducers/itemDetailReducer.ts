@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import * as Interface from '../../Interface';
 
-const ADD = '[ITEMDETAIL]remove';
+const ADD = '[ITEMDETAIL]add';
 const MODIFY = '[ITEMDETAIL]modify';
 const REMOVE = '[ITEMDETAIL]remove';
 
@@ -17,7 +17,6 @@ export class ModifyAct implements Action {
 
 export class RemoveAct implements Action {
   type = REMOVE;
-  constructor(public payload: Interface.IItem[]) {}
 }
 
 const init: Interface.IItem = {};

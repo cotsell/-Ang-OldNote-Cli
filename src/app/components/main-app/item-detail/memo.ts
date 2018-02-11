@@ -5,12 +5,14 @@ import { FormGroup, FormControl } from '@angular/forms';
 import * as marked from 'marked';
 import * as prism from 'prismjs';
 import { Observable } from 'rxJs';
+import { Store } from '@ngrx/store';
 
 import { GaterService } from '../../../service/gater.service';
 import { SysConf } from '../../../service/sysConfig';
 import { AccountService } from '../../../service/account.service';
 import { NetworkService } from '../../../service/network.service';
 import { IItem } from '../../../service/Interface';
+import * as StoreInfo from '../../../service/redux/storeInfo';
 
 @Component({
   selector: 'app-item-detail',
@@ -20,6 +22,7 @@ import { IItem } from '../../../service/Interface';
 export class ItemDetailComponent implements OnInit, OnDestroy {
   itemId;
   _item: IItem;
+  displayItem: IItem;
   tags: string[] = [];
   fastList: IItem[];
   orderChild: EventEmitter<any> = new EventEmitter();
@@ -27,9 +30,12 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
   isEditTitle = false;
 
   @ViewChild('target') target: ElementRef;
+  @ViewChild('MyTextarea') textArea: ElementRef;
+  @ViewChild('MyTitle') title: ElementRef;
 
   set item(value) {
     this._item = value;
+    this.displayItem = Object.assign({}, value);
     this.change();
   }
   get item() {
@@ -51,7 +57,8 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
   constructor(private router: ActivatedRoute,
               private http: HttpClient,
               private aService: AccountService,
-              private network: NetworkService) {
+              private network: NetworkService,
+              private store: Store<StoreInfo.StoreInfo>) {
     this.itemId = router.snapshot.params['id'];
     this.settingMakred();
   }
@@ -100,29 +107,6 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  // <input>엘리먼트에 포커스를 줍니다.
-  focusOnElement($event) {
-    $event.focus();
-  }
-
-  focusOutManage($event) {
-    // console.log($event);
-
-    this.clickEvent($event);
-
-    const tagName = $event['target']['tagName'];
-    const name = $event['target']['name'];
-
-    if (tagName === 'DIV' || tagName === 'FORM') {
-      this.isEditText = false;
-      this.isEditTitle = false;
-    } else if (tagName === 'A' && name === 'title') {
-      this.isEditText = false;
-    } else if (tagName === 'A' && name === 'text') {
-      this.isEditTitle = false;
-    }
-  }
-
   // Tag Component로부터 output되는 TagList를 받아와요.
   receiveTagList($event) {
     console.log($event);
@@ -149,12 +133,58 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
     );
   }
 
-  clickEvent(event) {
-    // console.log(`ttttt`);
+  // -----------------------------------------------------------------------
+  // Events
+  // -----------------------------------------------------------------------
+
+  // <input>엘리먼트에 포커스를 줍니다.
+  focusOnElement($event) {
+    $event.focus();
+    // console.log($event);
+  }
+
+  // 빈 공간을 클릭했을 시에 발생하는 이벤트 처리.
+  focusOutManage($event) {
+    this.isEditText = false;
+    this.isEditTitle = false;
+    this.clickEvent($event);
+  }
+
+  // 자식 컴포넌트들에게 클릭이벤트 전달해요.
+  private clickEvent(event) {
     this.orderChild.emit({ request: SysConf.CLICK_EVENT, object: event });
   }
 
-  receiveOutput(event) {
+  private clickedTitle(evnet) {
+    event.stopPropagation();
+    this.isEditTitle = true;
+    this.isEditText = false;
+    setTimeout(() => this.title.nativeElement.focus(), 0);
+    this.clickEvent(event);
+  }
+
+  private clickedText(event) {
+    event.stopPropagation();
+    this.isEditText = true;
+    this.isEditTitle = false;
+    setTimeout(() => this.textArea.nativeElement.focus(), 0);
+    this.clickEvent(event);
+  }
+
+  private clickedEditingTitle(event) {
+    event.stopPropagation();
+    this.isEditText = false;
+    this.clickEvent(event);
+  }
+
+  private clickedEditingText(event) {
+    event.stopPropagation();
+    this.isEditTitle = false;
+    this.clickEvent(event);
+  }
+
+  // 차일드로부터 이벤트를 받아서 처리해요.
+  private receiveOutput(event) {
     console.log(`item-detail.component.ts: receiveOutput(): `, event);
     switch (event.request) {
       case SysConf.GET_FAST_LIST_FROM_SERVER :
@@ -164,6 +194,9 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
     }
   }
 
+  // -----------------------------------------------------------------------
+  // MarkDown
+  // -----------------------------------------------------------------------
   private settingMakred() {
     marked.setOptions({
       renderer: new marked.Renderer(),
@@ -199,3 +232,93 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
   }
 }
+
+
+
+
+
+
+// -----------------------------------------------------------------------
+// <div id="main_grid" (click)="focusOutManage($event)">
+//   <!-- toolbar -->
+//   <div id="toolbar_grid">
+//     <app-toolbar></app-toolbar>
+//   </div>
+//   <!-- Fast Mini List -->
+//   <div>
+//     <app-fast-minilist
+//       [fastList]="fastList"
+//       [order]="orderChild"
+//       (output)="receiveOutput($event)">
+//     </app-fast-minilist>
+//   </div>
+
+//   <!-- Item Detail -->
+//   <div id="item_detail_div">
+//     <!-- Title -->
+//     <div style="margin-bottom: 14px;">
+//       <!-- 타이틀 수정 화면 -->
+//       <div [hidden]="!isEditTitle">
+//         <form [formGroup]="titleForm">
+//           <input
+//             #MyTitle
+//             name="title"
+//             class="title_input_text"
+//             type="text"
+//             [formControlName]="'title'"
+//             [value]="item?.title"
+//             (keypress)="saveTitle($event)"
+//             (click)="clickedEditingTitle($event)"
+//             >
+//         </form>
+//       </div>
+//       <!-- 타이틀 기본 표시 화면 -->
+//       <div [hidden]="isEditTitle">
+//           <a
+//             id="title_text"
+//             name="title"
+//             (click)="clickedTitle();"
+//             >
+//             {{ item?.title }}
+//           </a>
+//       </div>
+//     </div>
+//     <!-- Textarea -->
+//     <div>
+//       <!-- 내용 수정 화면 -->
+//       <div [hidden]="!isEditText">
+//         <form [formGroup] = "textForm" >
+//           <textarea
+//             #MyTextarea
+//             name="text"
+//             class="text_area"
+//             [class.text_area]="true"
+//             [formControlName]="'textarea'"
+//             [value]="item?.text ? item.text : ''"
+//             (click)="clickedEditingText($event)"
+//             ></textarea><br>
+//           <button class="save_button"
+//                   (click)="saveText(MyTextarea)">Save</button>
+//         </form>
+//       </div>
+//       <!-- 내용 기본 화면 -->
+//       <div [hidden]="isEditText" style="word-break: break-all;">
+//         <span #target
+//           (click)="clickedText($event)"
+//           name="text"
+//           >
+//         </span>
+//       </div>
+//     </div>
+//     <!-- Tag -->
+//     <div>
+//       <app-tag
+//         [tagList]="item?.tags"
+//         (outTagList)="receiveTagList($event)">
+//       </app-tag>
+//     </div>
+//   </div>
+
+//   <!-- Right empty space -->
+//   <div></div>
+// </div>

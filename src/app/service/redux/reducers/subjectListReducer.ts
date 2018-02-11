@@ -1,14 +1,36 @@
 import { Action } from '@ngrx/store';
+import * as Interface from '../../Interface';
 
-const TEST = 'test';
+const ADD = '[SUBJECT]add';
+const MODIFY = '[SUBJECT]modify';
+const REMOVE = '[SUBJECT]remove';
 
-export class TestAction implements Action {
-  type = TEST;
+export class AddAct implements Action {
+  type = ADD;
+  constructor(public payload: Interface.ISubject) {}
 }
 
-export function Reducer(state, action) {
+export class ModifyAct implements Action {
+  type = MODIFY;
+  constructor(public payload: Interface.ISubject) {}
+}
+
+export class RemoveAct implements Action {
+  type = REMOVE;
+  constructor(public payload: Interface.ISubject[]) {}
+}
+
+const init: Interface.ISubject[] = [];
+
+export function Reducer(state = init, action) {
   switch (action.type) {
-    case TEST:
+    case ADD:
+      return [...state, ...action.payload];
+
+    case MODIFY:
+      break;
+
+    case REMOVE:
       break;
 
     default:

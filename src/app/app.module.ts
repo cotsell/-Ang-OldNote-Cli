@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { AppComponent } from './app.component';
 import { LoginPageComponent } from './components/login-page/login-page.component';
@@ -74,7 +75,10 @@ const route: Routes = [
     HttpModule,
     ReactiveFormsModule,
     HttpClientModule,
-    StoreModule.forRoot({ itemDetail: Reducers.itemDetail.Reducer })
+    StoreModule.forRoot({ projectList: Reducers.project.Reducer,
+                          itemDetail: Reducers.itemDetail.Reducer,
+                          fastList: Reducers.fast.Reducer }),
+    StoreDevtoolsModule.instrument({ maxAge: 5 })
   ],
   providers: [ AccountService, GaterService, NetworkService ],
   bootstrap: [ AppComponent ]

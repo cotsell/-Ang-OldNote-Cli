@@ -1,34 +1,46 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxJs';
+
 import { AccountService } from '../../../service/account.service';
 import { SysConf } from '../../../service/sysConfig';
 import { IOrderMsg } from '../../../service/Interface';
+import { StoreInfo, getProjectList } from '../../../service/redux/storeInfo';
+import Reducers from '../../../service/redux/reducers';
+import * as Interface from '../../../service/Interface';
 
 @Component({
   selector: 'app-project-list',
   templateUrl: './project-list.component.html',
   styleUrls: ['./project-list.component.css']
 })
-export class ProjectListComponent implements OnInit {
-  projectList;
+export class ProjectListComponent implements OnInit, OnDestroy {
+  projectList: Interface.IProject[];
+  projectListSubscription: Subscription;
   orderChild: EventEmitter<IOrderMsg> = new EventEmitter();
 
   constructor(private aService: AccountService,
-              private http: HttpClient) {
+              private http: HttpClient,
+              public store: Store<StoreInfo>) {
   }
 
   ngOnInit() {
+    this.projectListSubscription = this.store.select(getProjectList).subscribe(obs => {
+      this.projectList = obs;
+    });
     this.loadProjectList();
   }
 
 
   private loadProjectList() {
-    this.http.get(SysConf.GET_PROJECT_LIST + '?' +
+    this.http.get<Interface.IProject[]>(SysConf.GET_PROJECT_LIST + '?' +
                   'key=' + this.aService.getToken() + '&' +
                   'id=' + this.aService.getUserInfo()['id'])
     .subscribe(obs => {
       // console.log(obs);
-      this.projectList = obs;
+      // this.projectList = obs;
+      this.store.dispatch(new Reducers.project.InsertNew(obs));
     });
   }
 
@@ -40,9 +52,14 @@ export class ProjectListComponent implements OnInit {
   }
 
   // 화면에 켜져있는 작은 메뉴들을 화면에서 숨겨주는 함수에요.
-  private orderChildEvent(event) {
+  private clickEvent(event) {
     // this.orderChild.emit({ request: SysConf.CLOSE_LAYER, object: event });
     this.orderChild.emit({ request: SysConf.CLICK_EVENT, object: event });
     // console.log(`test`);
+  }
+
+  ngOnDestroy() {
+    // console.log(`CALLED ngOnDestory()`);
+    this.projectListSubscription.unsubscribe();
   }
 }

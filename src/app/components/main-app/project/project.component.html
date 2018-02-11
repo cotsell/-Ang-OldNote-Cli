@@ -5,11 +5,11 @@
         class="round_div no_edit_mode def_background_color"
         (mouseover)="showMiniMenu()"
         (mouseout)="hideMiniMenu()">
-        <span><a [routerLink]="['./project', project._id]">{{ project.title }}</a></span>
+        <span><a [routerLink]="['./project', displayProject._id]">{{ displayProject.title }}</a></span>
         <!-- 미니 메뉴 -->
         <div style="display: inline-block; position: absolute; top: 0px; right: 0px;">
             <app-minimenu   
-                [object]="{ request: 'Project', object: project }"
+                [object]="{ request: 'Project', object: displayProject }"
                 [order]="orderChild"
                 (output)="refreshProjectList($event)">
             </app-minimenu>
@@ -19,16 +19,18 @@
     <div *ngIf="isEditable">
         <div *ngIf="isTitleEditMode">
             <form [formGroup]="titleForm">
-                <input #MyTitle
-                        type="text" 
-                        [value]="project.title" 
-                        [formControlName]="'title'"
-                        (focusout)="isTitleEditMode = false;"
-                        (keypress)="saveTitle($event)">
+                <input 
+                    #MyTitle
+                    type="text" 
+                    [value]="displayProject.title" 
+                    [formControlName]="'title'"
+                    (focusout)="isTitleEditMode = false;"
+                    (keypress)="saveTitle($event)"
+                    >
                 <template *ngIf="isTitleEditMode;then focusOn(MyTitle)"></template>
             </form>
         </div>
-        <span *ngIf="!isTitleEditMode" (click)="projectTitleEditMode()">{{ project?.title }}</span>
+        <span *ngIf="!isTitleEditMode" (click)="projectTitleEditMode()">{{ displayProject?.title }}</span>
     </div>
 </div>
 <!-- 새로운 입력을 받는 모드에요. -->

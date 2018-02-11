@@ -1,11 +1,18 @@
-<div class="def_background_color" id="main_grid" (click)="orderChildEvent($event)">
+<div class="def_background_color" id="main_grid" (click)="clickEvent($event)">
   <div>
     <div>
         <app-toolbar></app-toolbar>
     </div>
     
-    <div *ngFor="let project of projectList" style="display:inline-block;" >
+    <!-- <div *ngFor="let project of projectList" style="display:inline-block;" >
       <app-project  [project] = "project"
+                    [isEditable]="false"
+                    (output)="receiveRequest($event)"
+                    [order]="orderChild"
+                    ></app-project>
+    </div> -->
+    <div *ngFor="let project of projectList; let i = index;" style="display:inline-block;" >
+      <app-project  [index] = "i"
                     [isEditable]="false"
                     (output)="receiveRequest($event)"
                     [order]="orderChild"
