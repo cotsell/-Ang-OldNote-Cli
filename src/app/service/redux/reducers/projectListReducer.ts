@@ -5,6 +5,7 @@ const INSERT_NEW = '[PROJECT]insertNew';
 const ADD = '[PROJECT]add';
 const MODIFY = '[PROJECT]modify';
 const REMOVE = '[PROJECT]remove';
+const REMOVE_ALL = '[PROJECT]removeAll';
 
 export class InsertNew implements Action {
   type = INSERT_NEW;
@@ -23,7 +24,11 @@ export class ModifyAct implements Action {
 
 export class RemoveAct implements Action {
   type = REMOVE;
-  constructor(public payload: Interface.IProject[]) {}
+  constructor(public payload: Interface.IProject) {}
+}
+
+export class RemoveAllAct implements Action {
+  type = REMOVE_ALL;
 }
 
 const init: Interface.IProject[] = [];
@@ -43,7 +48,12 @@ export function Reducer(state = init, action) {
       });
 
     case REMOVE:
-      break;
+      return state.filter(value => {
+        return value._id !== action.payload._id;
+      });
+
+    case REMOVE_ALL:
+      return [];
 
     default:
       return state;

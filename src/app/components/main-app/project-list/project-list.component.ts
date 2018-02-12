@@ -39,7 +39,6 @@ export class ProjectListComponent implements OnInit, OnDestroy {
                   'id=' + this.aService.getUserInfo()['id'])
     .subscribe(obs => {
       // console.log(obs);
-      // this.projectList = obs;
       this.store.dispatch(new Reducers.project.InsertNew(obs));
     });
   }

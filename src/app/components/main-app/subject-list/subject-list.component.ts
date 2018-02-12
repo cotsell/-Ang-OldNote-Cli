@@ -29,6 +29,9 @@ export class SubjectListComponent implements OnInit {
   }
 
   ngOnInit() {
+    // ProjectList 구독합니다.
+    // Project Component에서 라우터를 통해 Project의 id값을 받았기 때문에,
+    // 리덕스에서 값을 가져와서 쓰도록 합니다.
     this.projectId = this.route.snapshot.params['id'];
     this.projectSubscription = this.store.select(getProjectList)
       .subscribe(obs => {

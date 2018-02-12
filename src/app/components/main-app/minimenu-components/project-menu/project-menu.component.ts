@@ -1,9 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Store } from '@ngrx/store';
 
 import { What } from '../../minimenu/minimenu.component';
 import { NetworkService } from '../../../../service/network.service';
 import { SysConf } from '../../../../service/sysConfig';
 import { IOutputMsg } from '../../../../service/Interface';
+import { StoreInfo } from '../../../../service/redux/storeInfo';
+import Reducers from '../../../../service/redux/reducers';
 
 
 @Component({
@@ -13,9 +16,9 @@ import { IOutputMsg } from '../../../../service/Interface';
 })
 export class ProjectMenuComponent implements OnInit {
 @Input() object: What;
-@Output() output: EventEmitter<any> = new EventEmitter();
 
-  constructor(private network: NetworkService) { }
+  constructor(private network: NetworkService,
+              private store: Store<StoreInfo>) { }
 
   ngOnInit() {
   }
@@ -23,12 +26,7 @@ export class ProjectMenuComponent implements OnInit {
   deleteObject() {
     this.network.deleteProject(this.object.object)
     .subscribe(obs => {
-      // console.log(`minimenu.component.ts: deleteObject(): ${ JSON.stringify(obs) }`);
-      this.Output({ request: SysConf.GET_PROJECT_LIST_FROM_SERVER });
+      this.store.dispatch(new Reducers.project.RemoveAct(this.object.object));
     });
-  }
-
-  Output(msg: IOutputMsg) {
-    this.output.emit(msg);
   }
 }

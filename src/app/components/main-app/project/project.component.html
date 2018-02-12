@@ -1,51 +1,52 @@
 <div *ngIf="!isNewMode" style="display:inline-block;">
-    <!-- isEditable이 false -->
-    <div    
-        *ngIf="isEditable === false" 
-        class="round_div no_edit_mode def_background_color"
-        (mouseover)="showMiniMenu()"
-        (mouseout)="hideMiniMenu()">
-        <!-- <span><a [routerLink]="['./project', displayProject._id]">{{ displayProject.title }}</a></span> -->
-        <span><a [routerLink]="['./project', projectId]">{{ displayProject.title }}</a></span>
-        <!-- 미니 메뉴 -->
-        <div style="display: inline-block; position: absolute; top: 0px; right: 0px;">
-            <app-minimenu   
-                [object]="{ request: 'Project', object: displayProject }"
-                [order]="orderChild"
-                (output)="refreshProjectList($event)">
-            </app-minimenu>
-        </div>
-    </div>
-    <!-- isEditable이 true -->
-    <div *ngIf="isEditable">
-        <div *ngIf="isTitleEditMode">
-            <form [formGroup]="titleForm">
-                <input 
-                    #MyTitle
-                    type="text" 
-                    [value]="displayProject.title" 
-                    [formControlName]="'title'"
-                    (focusout)="isTitleEditMode = false;"
-                    (keypress)="saveTitle($event)"
-                    >
-                <template *ngIf="isTitleEditMode;then focusOn(MyTitle)"></template>
-            </form>
-        </div>
-        <span *ngIf="!isTitleEditMode" (click)="projectTitleEditMode()">{{ displayProject?.title }}</span>
-    </div>
+	<!-- isEditable이 false -->
+	<div    
+		*ngIf="isEditable === false" 
+		class="round_div no_edit_mode def_background_color"
+		(mouseover)="showMiniMenu()"
+		(mouseout)="hideMiniMenu()">
+		<!-- <span><a [routerLink]="['./project', displayProject._id]">{{ displayProject.title }}</a></span> -->
+		<span><a [routerLink]="['./project', projectId]">{{ displayProject.title }}</a></span>
+		<!-- 미니 메뉴 -->
+		<div style="display: inline-block; position: absolute; top: 0px; right: 0px;">
+			<app-minimenu   
+				[object]="{ request: 'Project', object: displayProject }"
+				[order]="orderChild"
+				(output)="refreshProjectList($event)">
+			</app-minimenu>
+		</div>
+	</div>
+	<!-- isEditable이 true -->
+	<div *ngIf="isEditable">
+		<div *ngIf="isTitleEditMode">
+			<form [formGroup]="titleForm">
+				<input 
+					#MyTitle
+					type="text" 
+					[value]="displayProject.title" 
+					[formControlName]="'title'"
+					(focusout)="isTitleEditMode = false;"
+					(keypress)="saveTitle($event)"
+					>
+				<template *ngIf="isTitleEditMode;then focusOn(MyTitle)"></template>
+			</form>
+		</div>
+		<span *ngIf="!isTitleEditMode" (click)="projectTitleEditMode()">{{ displayProject?.title }}</span>
+	</div>
 </div>
 <!-- 새로운 입력을 받는 모드에요. -->
 <div *ngIf="isNewMode" class="round_div new_mode" style="display:inline-block;">
-    <div *ngIf="!isEditable">
-        <span style="cursor: pointer;"><a (click)="isEditable = true;">Create New Project...</a></span>
-    </div>
-    <div *ngIf="isEditable">
-        <input #title
-                type="text"
-                (focusout)="isEditable=false;"
-                (keypress)="sendNewProject($event)"
-                placeholder="Input new project name.."
-                >
-            <template *ngIf="isEditable;then focusOn(title);"></template>
-    </div>
+	<div *ngIf="!isEditable">
+		<span style="cursor: pointer;"><a (click)="isEditable = true;">Create New Project...</a></span>
+	</div>
+	<div *ngIf="isEditable">
+		<input 
+			#title
+			type="text"
+			(focusout)="isEditable=false;"
+			(keypress)="sendNewProject($event)"
+			placeholder="Input new project name.."
+			>
+			<template *ngIf="isEditable;then focusOn(title);"></template>
+	</div>
 </div>

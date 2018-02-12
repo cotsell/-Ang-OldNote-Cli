@@ -18,7 +18,7 @@ import Reducers from '../../../service/redux/reducers';
 export class ProjectComponent implements OnInit, OnDestroy {
   @Input() projectId: string;
   @Input() isEditable = false;
-  @Input() isNewMode;
+  @Input() isNewMode = false;
   @Input() order: EventEmitter<IOrderMsg>;
   @Output() output: EventEmitter<any> = new EventEmitter(); // 부모에게 요청할 때 사용해요.
   orderChild: EventEmitter<IOrderMsg> = new EventEmitter(); // 자식 컴포넌트에게 요청할때 사용해요.
@@ -55,13 +55,16 @@ export class ProjectComponent implements OnInit, OnDestroy {
       });
     }
 
-    // 리덕스 구독
-    this.projectSubription = this.store.select(getProjectList).subscribe(obs => {
-      this.project = obs.find(value => {
-        return value._id === this.projectId;
-        }
-      );
-    });
+    // newMode가 true일때는 구독 할 필요가 없다.
+    if (this.isNewMode === false) {
+      // 리덕스 구독
+      this.projectSubription = this.store.select(getProjectList).subscribe(obs => {
+        this.project = obs.find(value => {
+          return value._id === this.projectId;
+          }
+        );
+      });
+    }
   }
 
   projectTitleEditMode() {
@@ -71,7 +74,6 @@ export class ProjectComponent implements OnInit, OnDestroy {
   saveTitle($event) {
     if ($event['key'] === 'Enter') {
       this.isTitleEditMode = false;
-      // this.project.title = $event.target.value;
       this.displayProject.title = $event.target.value;
       this.http.put(SysConf.UPDATE_PROJECT + '?' +
                     'key=' + this.aService.getToken(),
@@ -90,6 +92,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
   // 새로운 Project를 생성하기 위해, 서버에 요청해요.
   sendNewProject($event) {
     if ($event['key'] === 'Enter') {
+      console.log(`TEST: ${this.project} : ${this.aService.getUserInfo().id}`);
       this.project.writer_id = this.aService.getUserInfo().id;
       this.project.title = $event.target.value;
       this.isEditable = false;
@@ -98,30 +101,35 @@ export class ProjectComponent implements OnInit, OnDestroy {
                     this.project)
       .subscribe(obs => {
         console.log(obs);
-        this.Output({ request: SysConf.GET_PROJECT_LIST_FROM_SERVER });
+        this.store.dispatch(new Reducers.project.AddAct(this.project));
       });
     }
   }
 
+  // TODO 삭제 예정. 아직 얽힌 곳이 있어서 보류. 미니메뉴쪽에 다 삭제되면 여기도 삭제.
   refreshProjectList(event) {
     // console.log(`project.component.ts: refreshProjectList(): ${ JSON.stringify(event) }`);
     this.Output({ request: SysConf.GET_PROJECT_LIST_FROM_SERVER });
   }
 
+  // TODO 삭제 예정. refreshProjectList()가 삭제되면 얘도 필요 없겠지.
   Output(msg: IOutputMsg) {
     this.output.emit(msg);
   }
 
+  // TODO 삭제 예정. 모바일에서는 이 기능 사용 불가.
   // Div에 마우스를 올려 놓으면 작은 메뉴버튼을 띄워 주는 함수에요.
   showMiniMenu() {
     this.orderChild.emit({ request: SysConf.SHOW_MINI_MENU_BUTTON });
   }
 
+  // TODO 삭제 예정. 모바일에서는 이 기능 사용 불가.
   // Div에서 마우스를 치우면 작은 메뉴 버튼을 숨겨 주는 함수에요.
   hideMiniMenu() {
     this.orderChild.emit({ request: SysConf.HIDE_MINI_MENU_BUTTON });
   }
 
+  // TODO 삭제 예정. 모바일에서는 이 기능 사용 불가.
   // 화면에 켜져있는 작은 메뉴들을 화면에서 숨겨주는 함수에요.
   sendClickEventToChild(event: IOrderMsg) {
     this.orderChild.emit({ request: event.request, object: event.object });
