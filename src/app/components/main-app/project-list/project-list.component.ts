@@ -39,7 +39,9 @@ export class ProjectListComponent implements OnInit, OnDestroy {
                   'id=' + this.aService.getUserInfo()['id'])
     .subscribe(obs => {
       // console.log(obs);
-      this.store.dispatch(new Reducers.project.InsertNew(obs));
+      if (obs !== undefined && obs.length > 0) {
+        this.store.dispatch(new Reducers.project.InsertNew(obs));
+      }
     });
   }
 
@@ -59,6 +61,8 @@ export class ProjectListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     // console.log(`CALLED ngOnDestory()`);
-    this.projectListSubscription.unsubscribe();
+    if (this.projectListSubscription !== undefined) {
+      this.projectListSubscription.unsubscribe();
+    }
   }
 }

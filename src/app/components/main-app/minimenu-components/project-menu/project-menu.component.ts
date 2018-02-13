@@ -26,7 +26,10 @@ export class ProjectMenuComponent implements OnInit {
   deleteObject() {
     this.network.deleteProject(this.object.object)
     .subscribe(obs => {
-      this.store.dispatch(new Reducers.project.RemoveAct(this.object.object));
+      console.log(obs);
+      if (obs.project !== undefined) {
+        this.store.dispatch(new Reducers.project.RemoveAct(obs.project));
+      }
     });
   }
 }

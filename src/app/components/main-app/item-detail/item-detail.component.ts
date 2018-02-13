@@ -260,7 +260,11 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.store.dispatch(new ItemDetailRedux.RemoveAct());
     this.store.dispatch(new FastRedux.RemoveAct(this.fastList));
-    this.subscription.unsubscribe();
-    this.fastSubscription.unsubscribe();
+    if (this.subscription !== undefined) {
+      this.subscription.unsubscribe();
+    }
+    if (this.fastSubscription !== undefined) {
+      this.fastSubscription.unsubscribe();
+    }
   }
 }

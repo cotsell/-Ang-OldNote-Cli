@@ -12,6 +12,7 @@ export class SysConf {
   static GET_PROJECT_LIST = SysConf.ADDRESS_BASIC + '/get/project_list';
   static GET_PROJECT = SysConf.ADDRESS_BASIC + '/get/project';
   static GET_SUBJECT_LIST = SysConf.ADDRESS_BASIC + '/get/subject_list';
+  static GET_ITEM_LIST = SysConf.ADDRESS_BASIC + '/get/item_list';
   static GET_ITEM = SysConf.ADDRESS_BASIC + '/get/item';
   static GET_TAGS = SysConf.ADDRESS_BASIC + '/get/tags';
   static GET_FAST = SysConf.ADDRESS_BASIC + '/get/fast';

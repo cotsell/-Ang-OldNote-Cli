@@ -12,11 +12,28 @@ export class NetworkService {
   constructor(private http: HttpClient,
               private aService: AccountService) { }
 
+  getSubjectList(projectId: string): Observable<ISubject[]> {
+    return this.http.get<ISubject[]>(SysConf.GET_SUBJECT_LIST + '?' +
+                                    'key=' + this.aService.getToken() + '&' +
+                                    'id=' + projectId);
+  }
+
+
   getItem(itemId: string): Observable<any> {
     return this.http.get(SysConf.GET_ITEM + '?' +
                         'key=' + this.aService.getToken() + '&' +
                         'item_id=' + itemId
                         );
+  }
+
+  getItemListWithSubjects(subjects: ISubject[]): Observable<IItem[]> {
+    const ids = subjects.map(value => {
+      return value._id;
+    });
+
+    return this.http.get<IItem[]>(SysConf.GET_ITEM_LIST + '?' +
+                                  'key=' + this.aService.getToken() + '&' +
+                                  'ids=' + ids);
   }
 
   getTags(object: ITag): Observable<any> {

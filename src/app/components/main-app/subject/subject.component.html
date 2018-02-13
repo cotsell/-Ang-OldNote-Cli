@@ -45,7 +45,7 @@
   <!-- 아이템 리스트 -->
   <div id="item_list_div">
     <div 
-      *ngFor="let item of subject.items"
+      *ngFor="let item of itemList"
       style="display: inline-block;">
       <app-item 
         [item]="item" 
@@ -57,7 +57,7 @@
     <div style="display: inline-block;">
       <app-item 
         [isNewItem]="true" 
-        [project]="project" 
+        [projectId]="projectId" 
         [subject]="subject" 
         (output)="receiveOutput($event)">
       </app-item>

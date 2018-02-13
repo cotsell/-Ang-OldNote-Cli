@@ -92,7 +92,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
   // 새로운 Project를 생성하기 위해, 서버에 요청해요.
   sendNewProject($event) {
     if ($event['key'] === 'Enter') {
-      console.log(`TEST: ${this.project} : ${this.aService.getUserInfo().id}`);
+      // console.log(`TEST: ${this.project} : ${this.aService.getUserInfo().id}`);
       this.project.writer_id = this.aService.getUserInfo().id;
       this.project.title = $event.target.value;
       this.isEditable = false;
@@ -100,8 +100,8 @@ export class ProjectComponent implements OnInit, OnDestroy {
                       'key=' + this.aService.getToken(),
                     this.project)
       .subscribe(obs => {
-        console.log(obs);
-        this.store.dispatch(new Reducers.project.AddAct(this.project));
+        // console.log(obs);
+        this.store.dispatch(new Reducers.project.AddAct(obs));
       });
     }
   }
@@ -136,7 +136,9 @@ export class ProjectComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.projectSubription.unsubscribe();
+    if (this.projectSubription !== undefined) {
+      this.projectSubription.unsubscribe();
+    }
   }
 
 }

@@ -76,6 +76,8 @@ const route: Routes = [
     ReactiveFormsModule,
     HttpClientModule,
     StoreModule.forRoot({ projectList: Reducers.project.Reducer,
+                          subjectList: Reducers.subject.Reducer,
+                          itemList: Reducers.itemList.Reducer,
                           itemDetail: Reducers.itemDetail.Reducer,
                           fastList: Reducers.fast.Reducer }),
     StoreDevtoolsModule.instrument({ maxAge: 5 })

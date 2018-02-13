@@ -1,40 +1,47 @@
 import { Action } from '@ngrx/store';
 import * as Interface from '../../Interface';
 
-const INSERT_NEW = '[SUBJECT]insertNew';
-const ADD = '[SUBJECT]add';
-const MODIFY = '[SUBJECT]modify';
-const REMOVE = '[SUBJECT]remove';
-const REMOVE_ALL = '[SUBJECT]removeAll';
+const INSERT_NEW = '[ITEM]insertNew';
+const ADD = '[ITEM]add';
+const MODIFY = '[ITEM]modify';
+const REMOVE = '[ITEM]remove';
+const REMOVE_ALL = '[ITEM]removeAll';
+const REMOVE_BY_SUBJECT_ID = '[ITEM]removeBySubjectId';
 
 export class InsertNewAct implements Action {
   type = INSERT_NEW;
-  constructor(public payload: Interface.ISubject[]) {}
+  constructor(public payload: Interface.IItem[]) {}
 }
 
 export class AddAct implements Action {
   type = ADD;
-  constructor(public payload: Interface.ISubject) {}
+  constructor(public payload: Interface.IItem) {}
 }
 
 export class ModifyAct implements Action {
   type = MODIFY;
-  constructor(public payload: Interface.ISubject) {}
+  constructor(public payload: Interface.IItem) {}
 }
 
 export class RemoveAct implements Action {
   type = REMOVE;
-  constructor(public payload: Interface.ISubject[]) {}
+  constructor(public payload: Interface.IItem) {}
 }
 
 export class RemoveAllAct implements Action {
   type = REMOVE_ALL;
 }
 
-const init: Interface.ISubject[] = [];
+export class RemoveBySubjectIdAct implements Action {
+  type = REMOVE_BY_SUBJECT_ID;
+  constructor(public payload: string) {}
+}
+
+const init: Interface.IItem[] = [];
 
 export function Reducer(state = init, action) {
   switch (action.type) {
+
     case INSERT_NEW:
       return [...action.payload];
 
@@ -48,17 +55,16 @@ export function Reducer(state = init, action) {
 
     case REMOVE:
       return state.filter(value => {
-        let count = 0;
-        for (let i = 0; i < action.payload.length; i++) {
-          if (value._id === action.payload[i]._id) {
-            count = count + 1;
-          }
-        }
-        return count > 0 ? false : true;
+        return value._id !== action.payload._id;
       });
 
     case REMOVE_ALL:
       return [];
+
+    case REMOVE_BY_SUBJECT_ID:
+      return state.filter(value => {
+        return value.subject_id !== action.payload;
+      });
 
     default:
       return state;
