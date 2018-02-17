@@ -11,10 +11,24 @@ import { GaterService } from '../../../service/gater.service';
 import { SysConf } from '../../../service/sysConfig';
 import { AccountService } from '../../../service/account.service';
 import { NetworkService } from '../../../service/network.service';
-import { IItem } from '../../../service/Interface';
+import { IItem, ComponentUi } from '../../../service/Interface';
 import * as StoreInfo from '../../../service/redux/storeInfo';
 import * as ItemDetailRedux from '../../../service/redux/reducers/itemDetailReducer';
+import * as ComponentUiReducer from '../../../service/redux/reducers/componentUiReducer';
 import * as FastRedux from '../../../service/redux/reducers/fastListReducer';
+import { uuid } from '../../../service/utils';
+
+class UI {
+  value: ComponentUi;
+
+  constructor() {
+    this.value = { id: uuid(), state: { isEditText: false, isEditTitle: false }};
+  }
+
+  getClone(state: any) {
+    return Object.assign({}, this.value, { state: Object.assign({}, this.value.state, state ) });
+  }
+}
 
 @Component({
   selector: 'app-item-detail',
@@ -27,11 +41,11 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
   displayItem: IItem;
   subscription: Subscription;
   fastSubscription: Subscription;
+  uiSubscriptions: Subscription;
   tags: string[] = []; // 사용 용도 불명;;
   fastList: IItem[];
   orderChild: EventEmitter<any> = new EventEmitter();
-  isEditText = false;
-  isEditTitle = false;
+  ui = new UI();
 
   @ViewChild('target') target: ElementRef;
   @ViewChild('MyTextarea') textArea: ElementRef;
@@ -68,21 +82,14 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.network.getItem(this.itemId)
-    .subscribe(obs => {
-      this.store.dispatch(new ItemDetailRedux.AddAct(obs));
-      this.getFast(); // TODO: 임시로 여기에 있긴 한데, 차후 다른 위치로 옮겨질지도 몰라요.
-    });
-
-    // 태그를 가져옵니다. !! 아직 사용 용도 불명..
-    this.network.getTags({ writer_id: this.aService.getUserInfo().id })
-    .subscribe(obs => {
-      // TODO :: This is test code. Delete or change this code afger testing.
-      for (let i = 0; obs.length > i; i++) {
-        this.tags.push(obs[i].title);
-      }
-      // TODO :: End.
-    });
+    // 리덕스에 컴포넌트의 UI를 생성.
+    this.store.dispatch(new ComponentUiReducer.AddAct(this.ui.value));
+    this.uiSubscriptions = this.store.select(StoreInfo.getComponentUi)
+      .subscribe(obs => {
+        this.ui.value = obs.find(value => {
+          return value.id === this.ui.value.id ? true : false;
+        });
+      });
 
     // 리덕스 스토어를 구독 시작합니다.
     this.subscription = this.store.select(StoreInfo.getItemDetail)
@@ -94,6 +101,23 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
       .subscribe(obs => {
         this.fastList = obs;
       });
+
+    // 아이템의 내용을 서버에 요청합니다.
+    this.network.getItem(this.itemId)
+    .subscribe(obs => {
+      this.store.dispatch(new ItemDetailRedux.AddAct(obs));
+      setTimeout(() => { this.getFast(); }, 1000);    // TODO: 임시로 여기에 있긴 한데, 차후 다른 위치로 옮겨질지도 몰라요.
+    });
+
+    // 태그를 가져옵니다. !! 아직 사용 용도 불명..
+    this.network.getTags({ writer_id: this.aService.getUserInfo().id })
+    .subscribe(obs => {
+      // TODO :: This is test code. Delete or change this code afger testing.
+      for (let i = 0; obs.length > i; i++) {
+        this.tags.push(obs[i].title);
+      }
+      // TODO :: End.
+    });
   }
 
   // Textarea의 내용을 수정하기 위해 서버에 전달해요.
@@ -103,13 +127,13 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
     // this.item = Object.assign({}, this.item, { text: ref.value });
     this.displayItem.text = ref.value;
 
-    this.isEditText = false;
-    console.log(this.textForm);
+    this.store.dispatch(new ComponentUiReducer.ModifyAct(this.ui.getClone({ isEditText: false })));
+
     this.http.put(SysConf.UPDATE_ITEM + '?' +
                   'key=' + this.aService.getToken()
                   , { _id: this.displayItem._id, text: this.displayItem.text })
     .subscribe(obs => {
-      console.log(JSON.stringify(obs));
+      // console.log(JSON.stringify(obs));
       this.store.dispatch(new ItemDetailRedux.ModifyAct(this.displayItem));
     });
   }
@@ -119,39 +143,41 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
   saveTitle($event) {
     if ($event['key'] === 'Enter') {
       this.displayItem.title = $event.target.value;
-      this.isEditTitle = false;
+      this.store.dispatch(new ComponentUiReducer.ModifyAct(this.ui.getClone({ isEditTitle: false })));
       this.http.put(SysConf.UPDATE_ITEM + '?' +
                     'key=' + this.aService.getToken(),
                     { _id: this.displayItem._id, title: this.displayItem.title })
       .subscribe(obs => {
-        console.log(JSON.stringify(obs));
+        // console.log(JSON.stringify(obs));
         this.store.dispatch(new ItemDetailRedux.ModifyAct(this.displayItem));
       });
     }
   }
 
   // Tag Component로부터 output되는 TagList를 받아와요.
-  receiveTagList($event) {
-    console.log($event);
-    this.displayItem.tags = $event;
+  receiveTagList(event) {
+    // console.log($event);
+    this.displayItem.tags = event;
     this.http.put(SysConf.UPDATE_ITEM + '?' +
                   'key=' + this.aService.getToken(),
                   { _id: this.displayItem._id, tags: this.displayItem.tags })
     .subscribe(obs => {
-      console.log(obs);
+      // console.log(obs);
       this.store.dispatch(new ItemDetailRedux.ModifyAct(this.displayItem));
     });
   }
 
   // 해당 item의 tag와 project_id를 참조해서, FastInput들을 가져와요.
   getFast() {
+    // console.log(`TEST: ${this.displayItem.project_id}`);
+    // console.log(`TEST: ${this.displayItem.tags}`);
     this.network.getFast({
         project_id: this.displayItem.project_id,
         tags: this.displayItem.tags
       }
     )
     .subscribe(obs => {
-        console.log(obs);
+        // console.log(obs);
         // this.fastList = obs;
         this.store.dispatch(new FastRedux.AddAct(obs));
       }
@@ -170,8 +196,7 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
 
   // 빈 공간을 클릭했을 시에 발생하는 이벤트 처리.
   focusOutManage($event) {
-    this.isEditText = false;
-    this.isEditTitle = false;
+    this.store.dispatch(new ComponentUiReducer.ModifyAct(this.ui.getClone({ isEditText: false, isEditTitle: false })));
     this.clickEvent($event);
   }
 
@@ -182,41 +207,28 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
 
   private clickedTitle(evnet) {
     event.stopPropagation();
-    this.isEditTitle = true;
-    this.isEditText = false;
+    this.store.dispatch(new ComponentUiReducer.ModifyAct(this.ui.getClone({ isEditText: false, isEditTitle: true })));
     setTimeout(() => this.title.nativeElement.focus(), 0);
     this.clickEvent(event);
   }
 
   private clickedText(event) {
     event.stopPropagation();
-    this.isEditText = true;
-    this.isEditTitle = false;
+    this.store.dispatch(new ComponentUiReducer.ModifyAct(this.ui.getClone({ isEditText: true, isEditTitle: false })));
     setTimeout(() => this.textArea.nativeElement.focus(), 0);
     this.clickEvent(event);
   }
 
   private clickedEditingTitle(event) {
     event.stopPropagation();
-    this.isEditText = false;
+    this.store.dispatch(new ComponentUiReducer.ModifyAct(this.ui.getClone({ isEditText: false })));
     this.clickEvent(event);
   }
 
   private clickedEditingText(event) {
     event.stopPropagation();
-    this.isEditTitle = false;
+    this.store.dispatch(new ComponentUiReducer.ModifyAct(this.ui.getClone({ isEditTitle: false })));
     this.clickEvent(event);
-  }
-
-  // 차일드로부터 이벤트를 받아서 처리해요.
-  private receiveOutput(event) {
-    console.log(`item-detail.component.ts: receiveOutput(): `, event);
-    switch (event.request) {
-      case SysConf.GET_FAST_LIST_FROM_SERVER :
-        console.log(`item-detail.component.ts: receiveOutput(): getFast()`, event.request);
-        this.getFast();
-        break;
-    }
   }
 
   // -----------------------------------------------------------------------
@@ -258,8 +270,12 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.store.dispatch(new ComponentUiReducer.RemoveAct(this.ui.value));
     this.store.dispatch(new ItemDetailRedux.RemoveAct());
     this.store.dispatch(new FastRedux.RemoveAct(this.fastList));
+    if (this.uiSubscriptions !== undefined) {
+      this.uiSubscriptions.unsubscribe();
+    }
     if (this.subscription !== undefined) {
       this.subscription.unsubscribe();
     }

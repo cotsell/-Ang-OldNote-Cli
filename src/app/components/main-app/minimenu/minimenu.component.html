@@ -14,21 +14,21 @@
     <div *ngIf="object?.request === 'Subject'">
       <app-subject-menu
         [object]="object"
-        (output)="Output($event)">
+      >
       </app-subject-menu>
     </div>
     <!-- Item menu -->
     <div *ngIf="object?.request === 'Item'">
       <app-item-menu
         [object]="object"
-        (output)="Output($event)">
+      >
       </app-item-menu>
     </div>
     <!-- Fast menu -->
     <div *ngIf="object?.request === 'Fast'">
       <app-fast-menu
         [object]="object"
-        (output)="Output($event)">
+      >
       </app-fast-menu>
     </div>
   </div>

@@ -1,10 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Store } from '@ngrx/store';
 
 import { What } from '../../minimenu/minimenu.component';
 import { NetworkService } from '../../../../service/network.service';
 import { SysConf } from '../../../../service/sysConfig';
-import { IOutputMsg } from '../../../../service/Interface';
-
+import { IOutputMsg, IItem } from '../../../../service/Interface';
+import { StoreInfo } from '../../../../service/redux/storeInfo';
+import { RemoveAct } from '../../../../service/redux/reducers/fastListReducer';
 @Component({
   selector: 'app-fast-menu',
   templateUrl: './fast-menu.component.html',
@@ -12,11 +14,12 @@ import { IOutputMsg } from '../../../../service/Interface';
 })
 export class FastMenuComponent implements OnInit {
   @Input() object: What;
-  @Output() output: EventEmitter<any> = new EventEmitter();
 
-  constructor(private network: NetworkService) { }
+  constructor(private network: NetworkService,
+              private store: Store<StoreInfo>) { }
 
   ngOnInit() {
+    // console.log(JSON.stringify(this.object.object));
   }
 
   deleteObject(event) {
@@ -24,13 +27,11 @@ export class FastMenuComponent implements OnInit {
     if (this.object.object !== undefined && this.object.object !== null) {
       this.network.deleteFast(this.object.object)
       .subscribe(obs => {
-        console.log(obs);
-        this.Output({ request: SysConf.GET_FAST_LIST_FROM_SERVER });
+        // console.log(obs);
+        const temp: IItem[] = [this.object.object];
+        this.store.dispatch(new RemoveAct(temp));
       });
     }
   }
 
-  Output(msg: IOutputMsg) {
-    this.output.emit(msg);
-  }
 }

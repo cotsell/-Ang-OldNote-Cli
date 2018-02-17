@@ -32,7 +32,7 @@ import { ProjectMenuComponent } from './components/main-app/minimenu-components/
 import { SubjectMenuComponent } from './components/main-app/minimenu-components/subject-menu/subject-menu.component';
 import { ItemMenuComponent } from './components/main-app/minimenu-components/item-menu/item-menu.component';
 
-import Reducers from './service/redux/reducers';
+import { getReducers } from './service/redux/storeInfo';
 
 const route: Routes = [
   { path: '', component: LoginPageComponent },
@@ -75,11 +75,7 @@ const route: Routes = [
     HttpModule,
     ReactiveFormsModule,
     HttpClientModule,
-    StoreModule.forRoot({ projectList: Reducers.project.Reducer,
-                          subjectList: Reducers.subject.Reducer,
-                          itemList: Reducers.itemList.Reducer,
-                          itemDetail: Reducers.itemDetail.Reducer,
-                          fastList: Reducers.fast.Reducer }),
+    StoreModule.forRoot(getReducers()),
     StoreDevtoolsModule.instrument({ maxAge: 5 })
   ],
   providers: [ AccountService, GaterService, NetworkService ],

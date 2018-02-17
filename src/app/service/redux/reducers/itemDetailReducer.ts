@@ -4,6 +4,7 @@ import * as Interface from '../../Interface';
 const ADD = '[ITEMDETAIL]add';
 const MODIFY = '[ITEMDETAIL]modify';
 const REMOVE = '[ITEMDETAIL]remove';
+const ADD_TAG = '[ITEMDETAIL]addTag';
 
 export class AddAct implements Action {
   type = ADD;

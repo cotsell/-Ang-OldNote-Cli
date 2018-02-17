@@ -8,7 +8,7 @@
     <app-fast-minilist
       [fastList]="fastList"
       [order]="orderChild"
-      (output)="receiveOutput($event)">
+    >
     </app-fast-minilist>
   </div>
 
@@ -17,7 +17,7 @@
     <!-- Title -->
     <div style="margin-bottom: 14px;">
       <!-- 타이틀 수정 화면 -->
-      <div [hidden]="!isEditTitle">
+      <div [hidden]="!ui.value.state.isEditTitle">
         <form [formGroup]="titleForm">
           <input 
             #MyTitle
@@ -32,7 +32,7 @@
         </form>
       </div>
       <!-- 타이틀 기본 표시 화면 -->
-      <div [hidden]="isEditTitle">
+      <div [hidden]="ui.value.state.isEditTitle">
           <a
             id="title_text"
             name="title"
@@ -45,7 +45,7 @@
     <!-- Textarea -->
     <div>
       <!-- 내용 수정 화면 -->
-      <div [hidden]="!isEditText">
+      <div [hidden]="!ui.value.state.isEditText">
         <form [formGroup] = "textForm" >
           <textarea
             #MyTextarea
@@ -61,7 +61,7 @@
         </form>
       </div>
       <!-- 내용 기본 화면 -->
-      <div [hidden]="isEditText" style="word-break: break-all;">
+      <div [hidden]="ui.value.state.isEditText" style="word-break: break-all;">
         <span #target
           (click)="clickedText($event)"
           name="text"

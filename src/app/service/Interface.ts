@@ -49,6 +49,11 @@ export interface IUser {
     account_div?: number;
 }
 
+export interface ComponentUi {
+    id: string;
+    state: any;
+}
+
 export class DumyClass {
 
 }

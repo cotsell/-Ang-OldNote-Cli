@@ -15,7 +15,6 @@ import Reducers from '../../../../service/redux/reducers/';
 })
 export class SubjectMenuComponent implements OnInit {
   @Input() object: What;
-  @Output() output: EventEmitter<any> = new EventEmitter();
 
   constructor(private network: NetworkService,
               private store: Store<StoreInfo>) { }
@@ -36,8 +35,4 @@ export class SubjectMenuComponent implements OnInit {
     });
   }
 
-  // TODO 삭제 예정
-  Output(msg: IOutputMsg) {
-    this.output.emit(msg);
-  }
 }

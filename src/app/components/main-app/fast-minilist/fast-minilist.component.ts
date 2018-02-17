@@ -10,7 +10,6 @@ import { SysConf } from '../../../service/sysConfig';
 export class FastMinilistComponent implements OnInit {
   @Input() fastList: IItem[];
   @Input() order: EventEmitter<any>;
-  @Output() output: EventEmitter<any> = new EventEmitter();
   orderChild: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
@@ -25,16 +24,6 @@ export class FastMinilistComponent implements OnInit {
         // console.log('tttt', obs);
         this.orderChild.emit(obs);
       });
-    }
-  }
-
-  receiveOutput(event) {
-    console.log(`fast-minilist.component.ts: receiveOutput(): `, event);
-    switch (event.request) {
-
-      case SysConf.GET_FAST_LIST_FROM_SERVER :
-        this.output.emit(event);
-        break;
     }
   }
 

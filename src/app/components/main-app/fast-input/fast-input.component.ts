@@ -17,7 +17,6 @@ export class FastInputComponent implements OnInit {
   @Input() item: IItem;
   @Input() order: EventEmitter<any>;
   @Input() isFoldPage = false; // FastInput을 접을지 펼칠지를 정하는 변수에요.
-  @Output() output: EventEmitter<any> = new EventEmitter();
   orderChild: EventEmitter<any> = new EventEmitter();
 
   private isEditTextArea = false;
@@ -138,12 +137,4 @@ export class FastInputComponent implements OnInit {
     }
   }
 
-  receiveOutput(event: IOutputMsg) {
-    switch (event.request) {
-      case SysConf.GET_FAST_LIST_FROM_SERVER :
-        console.log(`fast-input.component.ts: receiveOutput(): `, event);
-        this.output.emit(event);
-        break;
-    }
-  }
 }

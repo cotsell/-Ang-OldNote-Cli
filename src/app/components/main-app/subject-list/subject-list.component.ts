@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxJs';
 
-// import { StoreInfo, getProjectList } from '../../../service/redux/storeInfo';
 import * as Redux from '../../../service/redux/storeInfo';
 import { AccountService } from '../../../service/account.service';
 import * as Interface from '../../../service/Interface';
@@ -57,6 +56,7 @@ export class SubjectListComponent implements OnInit, OnDestroy {
         this.itemList = obs;
       });
     this.getSubjectList();
+
   }
 
   // 서버로 서브젝트 리스트을 요청합니다. project의 id필요.

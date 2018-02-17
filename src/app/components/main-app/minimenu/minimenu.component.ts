@@ -18,7 +18,6 @@ export interface What {
 export class MinimenuComponent implements OnInit {
 @Input() object: What;
 @Input() order: EventEmitter<IOrderMsg>;
-@Output() output: EventEmitter<any> = new EventEmitter();
 
 @ViewChild('menu_layer') menuLayer: ElementRef;
 @ViewChild('menu_button') menuButton: ElementRef;
@@ -65,12 +64,6 @@ export class MinimenuComponent implements OnInit {
   closeMenuLayer() {
     // console.log(`minimenu.components.ts: closeMenuLayer(): 레이어를 닫을래요.`);
     this.menuLayer.nativeElement.hidden = true;
-  }
-
-  Output(msg: IOutputMsg) {
-    this.closeMenuLayer();
-    console.log(`minimenu.component.ts: Output(): `, msg);
-    this.output.emit(msg);
   }
 
 }

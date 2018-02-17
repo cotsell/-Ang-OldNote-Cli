@@ -15,7 +15,6 @@ import { RemoveAct } from '../../../../service/redux/reducers/itemListReducer';
 })
 export class ItemMenuComponent implements OnInit {
   @Input() object: What;
-  @Output() output: EventEmitter<any> = new EventEmitter();
 
   constructor(private network: NetworkService,
               private store: Store<StoreInfo>) { }
@@ -31,7 +30,4 @@ export class ItemMenuComponent implements OnInit {
     });
   }
 
-  Output(msg: IOutputMsg) {
-    this.output.emit(msg);
-  }
 }
