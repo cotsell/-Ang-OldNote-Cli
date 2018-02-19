@@ -31,9 +31,10 @@ orderChild: EventEmitter<any> = new EventEmitter();
   }
 
   // For Tesing.
-  goback() {
+  goback(event) {
     // this.aService.reset();
     // this.router.navigate(['/']);
+    event.stopPropagation();
     this.location.back();
   }
 

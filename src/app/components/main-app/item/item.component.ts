@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Store } from '@ngrx/store';
 
 import { AccountService } from '../../../service/account.service';
+import { uuid } from '../../../service/utils';
 import { SysConf } from '../../../service/sysConfig';
 import { IItem, IOutputMsg, IOrderMsg, IProject, ISubject } from '../../../service/Interface';
 import { AddAct } from '../../../service/redux/reducers/itemListReducer';
@@ -46,7 +47,8 @@ export class ItemComponent implements OnInit {
       const newItem: IItem = {  project_id: this.projectId,
                                 subject_id: this.subject._id,
                                 title: $event.target.value,
-                                writer_id: this.aService.getUserInfo().id
+                                writer_id: this.aService.getUserInfo().id,
+                                checkbox_list: { id: uuid(), title: '', list: [] }
                               };
       this.isInsertMode = false;
       // console.log(newItem);

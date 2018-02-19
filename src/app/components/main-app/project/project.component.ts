@@ -51,7 +51,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
     if (this.order !== undefined && this.order !== null) {
       this.order.subscribe(obs => {
         // 여기서는 할 게 없으므로 MiniMenu에게 그냥 넘겨주기로 해요.
-        this.sendClickEventToChild(obs);
+        this.clickEvent(obs);
       });
     }
 
@@ -129,9 +129,8 @@ export class ProjectComponent implements OnInit, OnDestroy {
     this.orderChild.emit({ request: SysConf.HIDE_MINI_MENU_BUTTON });
   }
 
-  // TODO 삭제 예정. 모바일에서는 이 기능 사용 불가.
   // 화면에 켜져있는 작은 메뉴들을 화면에서 숨겨주는 함수에요.
-  sendClickEventToChild(event: IOrderMsg) {
+  clickEvent(event: IOrderMsg) {
     this.orderChild.emit({ request: event.request, object: event.object });
   }
 

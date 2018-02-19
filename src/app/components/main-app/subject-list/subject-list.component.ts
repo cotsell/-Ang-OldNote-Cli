@@ -99,8 +99,9 @@ export class SubjectListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.store.dispatch(new Reducers.subject.RemoveAllAct());
+    // this.store.dispatch(new Reducers.minimenuUi.RemoveAllMiniMenuAct());
     this.store.dispatch(new Reducers.itemList.RemoveAllAct());
+    this.store.dispatch(new Reducers.subject.RemoveAllAct());
 
 
     if (this.projectSubscription !== undefined) {

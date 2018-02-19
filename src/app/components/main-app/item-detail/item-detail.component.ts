@@ -11,7 +11,7 @@ import { GaterService } from '../../../service/gater.service';
 import { SysConf } from '../../../service/sysConfig';
 import { AccountService } from '../../../service/account.service';
 import { NetworkService } from '../../../service/network.service';
-import { IItem, ComponentUi } from '../../../service/Interface';
+import { IItem, IUiState } from '../../../service/Interface';
 import * as StoreInfo from '../../../service/redux/storeInfo';
 import * as ItemDetailRedux from '../../../service/redux/reducers/itemDetailReducer';
 import * as ComponentUiReducer from '../../../service/redux/reducers/componentUiReducer';
@@ -19,7 +19,7 @@ import * as FastRedux from '../../../service/redux/reducers/fastListReducer';
 import { uuid } from '../../../service/utils';
 
 class UI {
-  value: ComponentUi;
+  value: IUiState;
 
   constructor() {
     this.value = { id: uuid(), state: { isEditText: false, isEditTitle: false }};
@@ -83,7 +83,7 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // 리덕스에 컴포넌트의 UI를 생성.
-    this.store.dispatch(new ComponentUiReducer.AddAct(this.ui.value));
+    this.store.dispatch(new ComponentUiReducer.AddComponentAct(this.ui.value));
     this.uiSubscriptions = this.store.select(StoreInfo.getComponentUi)
       .subscribe(obs => {
         this.ui.value = obs.find(value => {
@@ -127,11 +127,13 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
     // this.item = Object.assign({}, this.item, { text: ref.value });
     this.displayItem.text = ref.value;
 
-    this.store.dispatch(new ComponentUiReducer.ModifyAct(this.ui.getClone({ isEditText: false })));
+    this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(this.ui.getClone({ isEditText: false })));
 
     this.http.put(SysConf.UPDATE_ITEM + '?' +
                   'key=' + this.aService.getToken()
-                  , { _id: this.displayItem._id, text: this.displayItem.text })
+                  , { _id: this.displayItem._id,
+                      text: this.displayItem.text,
+                      checkbox_list: { title: 'test', list: [{ id: 'test', isChecked: false }] } })
     .subscribe(obs => {
       // console.log(JSON.stringify(obs));
       this.store.dispatch(new ItemDetailRedux.ModifyAct(this.displayItem));
@@ -143,7 +145,7 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
   saveTitle($event) {
     if ($event['key'] === 'Enter') {
       this.displayItem.title = $event.target.value;
-      this.store.dispatch(new ComponentUiReducer.ModifyAct(this.ui.getClone({ isEditTitle: false })));
+      this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(this.ui.getClone({ isEditTitle: false })));
       this.http.put(SysConf.UPDATE_ITEM + '?' +
                     'key=' + this.aService.getToken(),
                     { _id: this.displayItem._id, title: this.displayItem.title })
@@ -196,7 +198,7 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
 
   // 빈 공간을 클릭했을 시에 발생하는 이벤트 처리.
   focusOutManage($event) {
-    this.store.dispatch(new ComponentUiReducer.ModifyAct(this.ui.getClone({ isEditText: false, isEditTitle: false })));
+    this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(this.ui.getClone({ isEditText: false, isEditTitle: false })));
     this.clickEvent($event);
   }
 
@@ -207,27 +209,27 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
 
   private clickedTitle(evnet) {
     event.stopPropagation();
-    this.store.dispatch(new ComponentUiReducer.ModifyAct(this.ui.getClone({ isEditText: false, isEditTitle: true })));
+    this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(this.ui.getClone({ isEditText: false, isEditTitle: true })));
     setTimeout(() => this.title.nativeElement.focus(), 0);
     this.clickEvent(event);
   }
 
   private clickedText(event) {
     event.stopPropagation();
-    this.store.dispatch(new ComponentUiReducer.ModifyAct(this.ui.getClone({ isEditText: true, isEditTitle: false })));
+    this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(this.ui.getClone({ isEditText: true, isEditTitle: false })));
     setTimeout(() => this.textArea.nativeElement.focus(), 0);
     this.clickEvent(event);
   }
 
   private clickedEditingTitle(event) {
     event.stopPropagation();
-    this.store.dispatch(new ComponentUiReducer.ModifyAct(this.ui.getClone({ isEditText: false })));
+    this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(this.ui.getClone({ isEditText: false })));
     this.clickEvent(event);
   }
 
   private clickedEditingText(event) {
     event.stopPropagation();
-    this.store.dispatch(new ComponentUiReducer.ModifyAct(this.ui.getClone({ isEditTitle: false })));
+    this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(this.ui.getClone({ isEditTitle: false })));
     this.clickEvent(event);
   }
 
@@ -270,7 +272,7 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.store.dispatch(new ComponentUiReducer.RemoveAct(this.ui.value));
+    this.store.dispatch(new ComponentUiReducer.RemoveComponentAct(this.ui.value));
     this.store.dispatch(new ItemDetailRedux.RemoveAct());
     this.store.dispatch(new FastRedux.RemoveAct(this.fastList));
     if (this.uiSubscriptions !== undefined) {

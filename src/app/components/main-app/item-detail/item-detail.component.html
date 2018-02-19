@@ -1,8 +1,10 @@
 <div id="main_grid" (click)="focusOutManage($event)">
+  
   <!-- toolbar -->
   <div id="toolbar_grid">
     <app-toolbar></app-toolbar>
   </div>
+
   <!-- Fast Mini List -->
   <div>
     <app-fast-minilist
@@ -28,7 +30,7 @@
             [value]="displayItem?.title"
             (keypress)="saveTitle($event)"
             (click)="clickedEditingTitle($event)"
-            >
+          >
         </form>
       </div>
       <!-- 타이틀 기본 표시 화면 -->
@@ -69,6 +71,15 @@
         </span>
       </div>
     </div>
+
+    <!-- Checkbox -->
+    <div>
+      <app-checkbox-list
+        [checkboxList]="displayItem.checkbox_list"
+      >
+      </app-checkbox-list>
+    </div>
+
     <!-- Tag -->
     <div>
       <app-tag
@@ -76,6 +87,7 @@
         (outTagList)="receiveTagList($event)">
       </app-tag>
     </div>
+
   </div>
 
   <!-- Right empty space -->

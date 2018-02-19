@@ -1,33 +1,33 @@
 import { Action } from '@ngrx/store';
-import { ComponentUi } from '../../Interface';
+import { IUiState } from '../../Interface';
 
-const ADD = '[COMPONENT_UI]add';
-const MODIFY = '[COMPONENT_UI]modify';
-const REMOVE = '[COMPONENT_UI]remove';
+const ADD_COMPONENT = '[UI]add_component';
+const MODIFY_COMPONENT = '[UI]modify_component';
+const REMOVE_COMPONENT = '[UI]remove_component';
 
-export class AddAct implements Action {
-  type = ADD;
-  constructor(public payload: ComponentUi) {}
+export class AddComponentAct implements Action {
+  type = ADD_COMPONENT;
+  constructor(public payload: IUiState) {}
 }
 
-export class ModifyAct implements Action {
-  type = MODIFY;
-  constructor(public payload: ComponentUi) {}
+export class ModifyComponentAct implements Action {
+  type = MODIFY_COMPONENT;
+  constructor(public payload: IUiState) {}
 }
 
-export class RemoveAct implements Action {
-  type = REMOVE;
-  constructor(public payload: ComponentUi) {}
+export class RemoveComponentAct implements Action {
+  type = REMOVE_COMPONENT;
+  constructor(public payload: IUiState) {}
 }
 
-const init: ComponentUi[] = [];
+const init: IUiState[] = [];
 
 export function Reducer(state = init, action) {
   switch (action.type) {
-    case ADD:
+    case ADD_COMPONENT:
       return [...state, ...action.payload];
 
-    case MODIFY:
+    case MODIFY_COMPONENT:
       return state.map(value => {
         if (value.id === action.payload.id) {
           return Object.assign({}, value, { state: action.payload.state });
@@ -36,13 +36,12 @@ export function Reducer(state = init, action) {
         }
       });
 
-    case REMOVE:
+    case REMOVE_COMPONENT:
     return state.filter(value => {
       return value.id !== action.payload.id;
     });
 
     default:
-    return state;
+      return state;
   }
 }
-

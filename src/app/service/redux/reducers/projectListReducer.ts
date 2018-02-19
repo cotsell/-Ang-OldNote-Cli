@@ -34,6 +34,7 @@ export class RemoveAllAct implements Action {
 const init: Interface.IProject[] = [];
 
 export function Reducer(state = init, action) {
+  // console.log(`REDUX TEST: ${JSON.stringify(state)}`);
   switch (action.type) {
 
     case INSERT_NEW:

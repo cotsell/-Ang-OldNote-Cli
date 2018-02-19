@@ -7,16 +7,23 @@ export interface StoreInfo {
   itemList: Interface.IItem[];
   fastList: Interface.IItem[];
   itemDetail: Interface.IItem;
-  componentUi: Interface.ComponentUi[];
+  checkboxList: Interface.ICheckboxList[];
+  // ui: Interface.IUi;
+  componentUi: Interface.IUiState[];
+  minimenuUi: Interface.IUiState[];
 }
 
 export function getReducers() {
-  return { projectList: Reducers.project.Reducer,
+  return  { projectList: Reducers.project.Reducer,
             subjectList: Reducers.subject.Reducer,
             itemList: Reducers.itemList.Reducer,
             itemDetail: Reducers.itemDetail.Reducer,
             fastList: Reducers.fast.Reducer,
-            componentUi: Reducers.componentUi.Reducer };
+            checkboxList: Reducers.checkbox.Reducer,
+            // ui: { minimenu: Reducers.minimenuUi.Reducer, component: Reducers.componentUi.Reducer }
+            componentUi: Reducers.componentUi.Reducer,
+            minimenuUi: Reducers.minimenuUi.Reducer,
+          };
 }
 
 export function getProjectList(state: StoreInfo): Interface.IProject[] {
@@ -39,6 +46,14 @@ export function getItemDetail(state: StoreInfo): Interface.IItem {
   return state.itemDetail;
 }
 
-export function getComponentUi(state: StoreInfo): Interface.ComponentUi[] {
+export function getComponentUi(state: StoreInfo): Interface.IUiState[] {
   return state.componentUi;
+}
+
+export function getMinimenuUi(state: StoreInfo): Interface.IUiState[] {
+  return state.minimenuUi;
+}
+
+export function getCheckbox(state: StoreInfo): Interface.ICheckboxList[] {
+  return state.checkboxList;
 }

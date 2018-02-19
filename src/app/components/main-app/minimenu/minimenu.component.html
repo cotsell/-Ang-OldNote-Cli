@@ -2,7 +2,8 @@
   <!-- 메뉴 레이어 -->
   <div  #menu_layer 
         id="menu_div"
-        [hidden]="true" >
+        [hidden]="uiState.state.menuHidden" >
+
     <!-- Project menu -->
     <div *ngIf="object?.request === 'Project'">
       <app-project-menu 
@@ -10,6 +11,7 @@
         >
       </app-project-menu>
     </div>
+
     <!-- Subject menu -->
     <div *ngIf="object?.request === 'Subject'">
       <app-subject-menu
@@ -17,6 +19,7 @@
       >
       </app-subject-menu>
     </div>
+
     <!-- Item menu -->
     <div *ngIf="object?.request === 'Item'">
       <app-item-menu
@@ -24,6 +27,7 @@
       >
       </app-item-menu>
     </div>
+
     <!-- Fast menu -->
     <div *ngIf="object?.request === 'Fast'">
       <app-fast-menu
@@ -32,13 +36,14 @@
       </app-fast-menu>
     </div>
   </div>
+
   <!-- 미니메뉴 버튼 -->
   <div
     #menu_button
     [hidden]="true" 
     id="hide_menu"
     (click)="controlLayer($event, menu_layer)"
-    >
-    <i class="material-icons">more_vert</i>
+  >
+    <i class="material-icons icon_size" style="color: gray;">more_vert</i>
   </div>
 </div>

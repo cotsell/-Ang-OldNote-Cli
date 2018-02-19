@@ -8,6 +8,16 @@ export interface IOrderMsg {
     object?: any;
 }
 
+export interface IUi {
+    minimenu: IUiState[];
+    component: IUiState[];
+}
+
+export interface IUiState {
+    id: string;
+    state: any;
+}
+
 // Server와 동기화시켜야 하는 인터페이스
 export interface IProject {
     _id?: string;
@@ -33,6 +43,20 @@ export interface IItem {
     title?: string;
     text?: string;
     tags?: string[];
+    checkbox_list?: ICheckboxList;
+}
+
+export interface ICheckboxList {
+    id?: string;
+    title: string;
+    list: ICheckbox[];
+}
+
+export interface ICheckbox {
+    id?: string;
+    isChecked?: boolean;
+    text?: string;
+    sortNumber?: number;
 }
 
 export interface ITag {
@@ -47,11 +71,6 @@ export interface IUser {
     id?: string;
     display_name?: string;
     account_div?: number;
-}
-
-export interface ComponentUi {
-    id: string;
-    state: any;
 }
 
 export class DumyClass {
