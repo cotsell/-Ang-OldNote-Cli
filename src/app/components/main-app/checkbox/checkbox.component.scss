@@ -1,0 +1,12 @@
+.main_grid {
+  display: grid;
+  grid-template-columns: 1rem auto;
+}
+
+#checkbox_div {
+  
+}
+
+input[type="checkbox"] {
+  display: inline-block;
+}

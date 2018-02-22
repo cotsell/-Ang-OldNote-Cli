@@ -134,6 +134,11 @@ export class ProjectComponent implements OnInit, OnDestroy {
     this.orderChild.emit({ request: event.request, object: event.object });
   }
 
+  changeIsEditable(event) {
+    event.stopPropagation();
+    this.isEditable = true;
+  }
+
   ngOnDestroy() {
     if (this.projectSubription !== undefined) {
       this.projectSubription.unsubscribe();

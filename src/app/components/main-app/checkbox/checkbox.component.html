@@ -1,0 +1,38 @@
+<div *ngIf="new">
+  <input 
+    type="text" 
+    placeholder="plz input new checkbox"
+    (keypress)="createNewCheckBox($event)"  
+  >
+</div>
+
+<div *ngIf="!new">
+  <div class="main_grid">
+    <div id="checkbox_div">
+      <input 
+        type="checkbox" 
+        (change)="changedCheckState($event)" 
+        [checked]="displayCheckbox.isChecked"  
+      >
+    </div>
+
+    <div>
+      <div 
+        [hidden]="isEditText"
+        (click)="changeIsEditText($event)"
+      >
+        {{ displayCheckbox?.text }}
+      </div>
+      <div [hidden]="!isEditText">
+        <input 
+          #inputText
+          type="text" 
+          placeholder="text" 
+          [value]="displayCheckbox.text"
+          (focusout)="changeIsEditText($event)"
+          (keypress)="changedTextState($event)"
+        >
+      </div>
+    </div>
+  </div>
+</div>

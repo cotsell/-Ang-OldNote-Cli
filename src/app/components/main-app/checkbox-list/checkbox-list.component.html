@@ -1,3 +1,31 @@
-<p>
-  checkbox-list works!
-</p>
+<!-- <div 
+  class="main_grid"
+  *ngIf="checkboxList?.list?.length > 0"
+  > -->
+<div 
+  class="main_grid"
+  >
+  <!-- 타이틀 -->
+  <div>
+    a
+  </div>
+
+  <!-- 새로운 체크박스 입력 -->
+  <div>
+    <app-checkbox 
+      [new]="true" 
+      (newCheckBox)="newCheckBox($event)"
+    >
+    </app-checkbox>
+  </div>
+
+  <!-- 체크박스 리스트 -->
+  <div *ngFor="let checkbox of checkboxList?.list">
+    <app-checkbox 
+      [checkbox]="checkbox"
+      (modifyCheckBox)="modifyCheckBox($event)"
+      (removeCheckBox)="removeCheckBox($event)"
+    >
+    </app-checkbox>
+  </div>
+</div>

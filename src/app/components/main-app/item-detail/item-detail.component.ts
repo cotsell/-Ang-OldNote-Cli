@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, OnChanges, EventEmitter, ViewChild, SimpleChanges,
+          ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup, FormControl } from '@angular/forms';
@@ -16,6 +17,7 @@ import * as StoreInfo from '../../../service/redux/storeInfo';
 import * as ItemDetailRedux from '../../../service/redux/reducers/itemDetailReducer';
 import * as ComponentUiReducer from '../../../service/redux/reducers/componentUiReducer';
 import * as FastRedux from '../../../service/redux/reducers/fastListReducer';
+import * as CheckboxListRedux from '../../../service/redux/reducers/checkboxReducer';
 import { uuid } from '../../../service/utils';
 
 class UI {
@@ -35,7 +37,7 @@ class UI {
   templateUrl: './item-detail.component.html',
   styleUrls: ['./item-detail.component.css']
 })
-export class ItemDetailComponent implements OnInit, OnDestroy {
+export class ItemDetailComponent implements OnInit, OnDestroy, OnChanges {
   itemId;
   _item: IItem;
   displayItem: IItem;
@@ -82,6 +84,7 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    console.log(`Item-Detail ngOnItit()`);
     // 리덕스에 컴포넌트의 UI를 생성.
     this.store.dispatch(new ComponentUiReducer.AddComponentAct(this.ui.value));
     this.uiSubscriptions = this.store.select(StoreInfo.getComponentUi)
@@ -106,18 +109,23 @@ export class ItemDetailComponent implements OnInit, OnDestroy {
     this.network.getItem(this.itemId)
     .subscribe(obs => {
       this.store.dispatch(new ItemDetailRedux.AddAct(obs));
+      this.store.dispatch(new CheckboxListRedux.AddListAct(obs.checkbox_list));
       setTimeout(() => { this.getFast(); }, 1000);    // TODO: 임시로 여기에 있긴 한데, 차후 다른 위치로 옮겨질지도 몰라요.
     });
 
     // 태그를 가져옵니다. !! 아직 사용 용도 불명..
     this.network.getTags({ writer_id: this.aService.getUserInfo().id })
     .subscribe(obs => {
-      // TODO :: This is test code. Delete or change this code afger testing.
+      // TODO :: This is test code. Delete or change this code after testing.
       for (let i = 0; obs.length > i; i++) {
         this.tags.push(obs[i].title);
       }
       // TODO :: End.
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+
   }
 
   // Textarea의 내용을 수정하기 위해 서버에 전달해요.

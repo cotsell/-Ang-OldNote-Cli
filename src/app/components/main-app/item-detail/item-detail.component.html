@@ -75,8 +75,14 @@
     <!-- Checkbox -->
     <div>
       <app-checkbox-list
-        [checkboxList]="displayItem.checkbox_list"
+        [checkboxListId]="displayItem.checkbox_list?.id"
+        [newItemFunc]=""
+        [modifyItemFunc]=""
+        [removeItemFunc]=""
       >
+      <!-- <app-checkbox-list
+        [checkboxListId]="displayItem.checkbox_list?.id"
+      > -->
       </app-checkbox-list>
     </div>
 
@@ -84,7 +90,8 @@
     <div>
       <app-tag
         [tagList]="displayItem?.tags"
-        (outTagList)="receiveTagList($event)">
+        (outTagList)="receiveTagList($event)"
+      >
       </app-tag>
     </div>
 

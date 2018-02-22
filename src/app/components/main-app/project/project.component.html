@@ -34,10 +34,13 @@
 		<span *ngIf="!isTitleEditMode" (click)="projectTitleEditMode()">{{ displayProject?.title }}</span>
 	</div>
 </div>
+
 <!-- 새로운 입력을 받는 모드에요. -->
 <div *ngIf="isNewMode" class="round_div new_mode" style="display:inline-block;">
 	<div *ngIf="!isEditable">
-		<span style="cursor: pointer;"><a (click)="isEditable = true;">Create New Project...</a></span>
+		<span style="cursor: pointer;">
+			<a (click)="changeIsEditable($event)">Create New Project...</a>
+		</span>
 	</div>
 	<div *ngIf="isEditable">
 		<input 

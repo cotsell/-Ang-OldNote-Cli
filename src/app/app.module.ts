@@ -34,6 +34,7 @@ import { ItemMenuComponent } from './components/main-app/minimenu-components/ite
 
 import { getReducers } from './service/redux/storeInfo';
 import { CheckboxListComponent } from './components/main-app/checkbox-list/checkbox-list.component';
+import { CheckboxComponent } from './components/main-app/checkbox/checkbox.component';
 
 const route: Routes = [
   { path: '', component: LoginPageComponent },
@@ -69,6 +70,7 @@ const route: Routes = [
     SubjectMenuComponent,
     ItemMenuComponent,
     CheckboxListComponent,
+    CheckboxComponent,
     ToolbarComponent
   ],
   imports: [
