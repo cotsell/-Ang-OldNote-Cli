@@ -7,12 +7,16 @@
 </div>
 
 <div *ngIf="!new">
-  <div class="main_grid">
+  <div 
+    class="main_grid"
+  >
+    
     <div id="checkbox_div">
       <input 
-        type="checkbox" 
-        (change)="changedCheckState($event)" 
-        [checked]="displayCheckbox.isChecked"  
+      type="checkbox" 
+      (change)="changedCheckState($event)" 
+      [checked]="displayCheckbox.isChecked"
+      (click)="stopEventBubbling($event)"  
       >
     </div>
 
@@ -33,6 +37,13 @@
           (keypress)="changedTextState($event)"
         >
       </div>
+    </div>
+
+    <div 
+      id="close"
+      (click)="removeCheckBoxItem($event)"  
+    >
+      <i class="material-icons">close</i>
     </div>
   </div>
 </div>

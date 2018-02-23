@@ -11,12 +11,8 @@
 
 import { Component, OnInit, OnDestroy, OnChanges, Input, Output, EventEmitter,
           SimpleChanges } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Subscription } from 'rxJs';
 
 import { ICheckboxList } from '../../../service/Interface';
-import { StoreInfo, getCheckbox } from '../../../service/redux/storeInfo';
-import * as CheckBoxListRedux from '../../../service/redux/reducers/checkboxReducer';
 
 @Component({
   selector: 'app-checkbox-list',
@@ -24,78 +20,38 @@ import * as CheckBoxListRedux from '../../../service/redux/reducers/checkboxRedu
   styleUrls: ['./checkbox-list.component.scss']
 })
 export class CheckboxListComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() newItemFunc;             // 필. 네트워크 처리 함수를 넣어주세요.
-  @Input() modifyItemFunc;          // 필. 네트워크 처리 함수를 넣어주세요.
-  @Input() removeItemFunc;          // 필. 네트워크 처리 함수를 넣어주세요.
+  @Input() newItemFunc;     // 필수. 네트워크 처리 함수를 넣어주세요.
+  @Input() modifyItemFunc;  // 필수. 네트워크 처리 함수를 넣어주세요.
+  @Input() removeItemFunc;  // 필수. 네트워크 처리 함수를 넣어주세요.
 
-  @Input() checkboxListId;
-
-  subscription: Subscription;
-  checkboxList: ICheckboxList;
-
-  constructor(private store: Store<StoreInfo>) {
-    // 리덕스 구독.
-    this.subscription = this.store.select(getCheckbox)
-      .subscribe(obs => {
-        this.checkboxList = obs.find(item => {
-          return item.id === this.checkboxListId;
-        });
-      });
-   }
-
-  ngOnInit() {
-    // console.log(`checkbox-list ngOnInit()`);
-    // setTimeout(() => { console.log(JSON.stringify(this.checkboxList)); }, 2000);
+  @Input()
+  set checkboxList(value: ICheckboxList) {
+    this._checkboxList = Object.assign({}, value);
+  }
+  get checkboxList() {
+    return this._checkboxList;
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    // console.log(`checkbox-list ngOnChanges`);
-    // console.log(changes);
+  _checkboxList: ICheckboxList;
 
-    // checkboxListId의 값이 바뀔 때마다 기존의 구독을 해지하고, 다시 구독을 신청해요.
-    if (changes.checkboxListId.firstChange !== true &&
-        changes.checkboxListId.currentValue !== null &&
-        changes.checkboxListId.currentValue !== undefined) {
-      this.unSubscribe(this.subscription); // 혹시나 이전에 구독하고 있는게 있을 수 있으니까..
-      if (this.checkboxListId !== undefined && this.checkboxListId !== null) {
-        this.subscription = this.store.select(getCheckbox)
-        .subscribe(obs => {
-          this.checkboxList = obs.find(item => {
-            return item.id === this.checkboxListId;
-          });
-        });
-      }
-    }
-  }
+  constructor() { }
+
+  ngOnInit() {}
+
+  ngOnChanges(changes: SimpleChanges) {}
 
   private newCheckBox(event) {
-    // console.log(JSON.stringify(event));
-    this.store.dispatch(new CheckBoxListRedux.AddItemAct(this.checkboxListId, event));
+    this.newItemFunc(event);
   }
 
   private modifyCheckBox(event) {
-    // console.log(event);
-    // console.log(this.checkboxList.list);
-    this.store.dispatch(new CheckBoxListRedux.ModifyItemAct(this.checkboxListId, event));
+    this.modifyItemFunc(event);
   }
 
   private removeCheckBox(event) {
-    console.log(event);
-    console.log(this.checkboxList.list);
+    this.removeItemFunc(event);
   }
 
-  outputStateChanged() {
-
-  }
-
-  unSubscribe(scription: Subscription) {
-    if (scription !== undefined) {
-      scription.unsubscribe();
-    }
-  }
-
-  ngOnDestroy() {
-    this.unSubscribe(this.subscription);
-  }
+  ngOnDestroy() {}
 
 }

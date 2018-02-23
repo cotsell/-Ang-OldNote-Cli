@@ -1,6 +1,24 @@
+@import '../../../../styles';
+
+$closeBackColor: black;
+
 .main_grid {
   display: grid;
-  grid-template-columns: 1rem auto;
+  grid-template-columns: 1rem auto 2rem;
+  border-radius: 2px;
+
+  &:hover {
+    background-color: $g_FontColor;
+  }
+
+}
+
+#close {
+  cursor: pointer;
+  &:hover {
+    background-color: $closeBackColor;
+    color: white;
+  }
 }
 
 #checkbox_div {

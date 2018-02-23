@@ -1,18 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
+$g_grayPalette: (
+    0: #ffffff,
+    1: #e6e6e6,
+    2: #cccccc,
+    3: #b2b2b2,
+    4: #999999,
+    5: #7f7f7f,
+    6: #666666,
+    7: #4d4d4d,
+    8: #323232,
+    9: #191919,
+    10: #000000
+);
+
+$g_FontColor: map-get($g_grayPalette, 7);
+$g_BackgroundColor: map-get($g_grayPalette, 1);
+
 html, body {
     height: 100%;
     width: 100%;
     margin: 0;
     padding: 0;
-    background-color: #e6e6e6;
+    background-color: $g_BackgroundColor;
 }
 
 .def_background_color {
-    background-color: #e6e6e6;
+    background-color: $g_BackgroundColor;
 }
 
 .def_font_color {
-    color: #4d4d4d;
+    color: $g_FontColor;
 }
 
 .def_div:hover {

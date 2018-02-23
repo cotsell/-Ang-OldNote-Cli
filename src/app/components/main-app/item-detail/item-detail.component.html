@@ -75,10 +75,10 @@
     <!-- Checkbox -->
     <div>
       <app-checkbox-list
-        [checkboxListId]="displayItem.checkbox_list?.id"
-        [newItemFunc]=""
-        [modifyItemFunc]=""
-        [removeItemFunc]=""
+        [checkboxList]="displayItem.checkbox_list"
+        [newItemFunc]="handleNewItem"
+        [modifyItemFunc]="handleModifyItem"
+        [removeItemFunc]="handleRemoveItem"
       >
       <!-- <app-checkbox-list
         [checkboxListId]="displayItem.checkbox_list?.id"

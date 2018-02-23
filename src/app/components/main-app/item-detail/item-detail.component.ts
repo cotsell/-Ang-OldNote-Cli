@@ -12,12 +12,11 @@ import { GaterService } from '../../../service/gater.service';
 import { SysConf } from '../../../service/sysConfig';
 import { AccountService } from '../../../service/account.service';
 import { NetworkService } from '../../../service/network.service';
-import { IItem, IUiState } from '../../../service/Interface';
+import { IItem, IUiState, ICheckbox } from '../../../service/Interface';
 import * as StoreInfo from '../../../service/redux/storeInfo';
 import * as ItemDetailRedux from '../../../service/redux/reducers/itemDetailReducer';
 import * as ComponentUiReducer from '../../../service/redux/reducers/componentUiReducer';
 import * as FastRedux from '../../../service/redux/reducers/fastListReducer';
-import * as CheckboxListRedux from '../../../service/redux/reducers/checkboxReducer';
 import { uuid } from '../../../service/utils';
 
 class UI {
@@ -38,20 +37,20 @@ class UI {
   styleUrls: ['./item-detail.component.css']
 })
 export class ItemDetailComponent implements OnInit, OnDestroy, OnChanges {
-  itemId;
-  _item: IItem;
-  displayItem: IItem;
-  subscription: Subscription;
+  tags:             string[]          = []; // 사용 용도 불명;;
+  orderChild:       EventEmitter<any> = new EventEmitter();
+  ui                                  = new UI();
+  _item:            IItem;
+  displayItem:      IItem;
+  subscription:     Subscription;
   fastSubscription: Subscription;
-  uiSubscriptions: Subscription;
-  tags: string[] = []; // 사용 용도 불명;;
-  fastList: IItem[];
-  orderChild: EventEmitter<any> = new EventEmitter();
-  ui = new UI();
+  uiSubscriptions:  Subscription;
+  fastList:         IItem[];
+  itemId;
 
-  @ViewChild('target') target: ElementRef;
-  @ViewChild('MyTextarea') textArea: ElementRef;
-  @ViewChild('MyTitle') title: ElementRef;
+  @ViewChild('target')      target:   ElementRef;
+  @ViewChild('MyTextarea')  textArea: ElementRef;
+  @ViewChild('MyTitle')     title:    ElementRef;
 
   set item(value) {
     this._item = value;
@@ -74,11 +73,11 @@ export class ItemDetailComponent implements OnInit, OnDestroy, OnChanges {
     }
   );
 
-  constructor(private router: ActivatedRoute,
-              private http: HttpClient,
+  constructor(private router:   ActivatedRoute,
+              private http:     HttpClient,
               private aService: AccountService,
-              private network: NetworkService,
-              private store: Store<StoreInfo.StoreInfo>) {
+              private network:  NetworkService,
+              private store:    Store<StoreInfo.StoreInfo>) {
     this.itemId = router.snapshot.params['id'];
     this.settingMakred();
   }
@@ -109,7 +108,7 @@ export class ItemDetailComponent implements OnInit, OnDestroy, OnChanges {
     this.network.getItem(this.itemId)
     .subscribe(obs => {
       this.store.dispatch(new ItemDetailRedux.AddAct(obs));
-      this.store.dispatch(new CheckboxListRedux.AddListAct(obs.checkbox_list));
+      // this.store.dispatch(new CheckboxListRedux.AddListAct(obs.checkbox_list));
       setTimeout(() => { this.getFast(); }, 1000);    // TODO: 임시로 여기에 있긴 한데, 차후 다른 위치로 옮겨질지도 몰라요.
     });
 
@@ -124,9 +123,7 @@ export class ItemDetailComponent implements OnInit, OnDestroy, OnChanges {
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-
-  }
+  ngOnChanges(changes: SimpleChanges) {}
 
   // Textarea의 내용을 수정하기 위해 서버에 전달해요.
   // Textarea의 내용은 <textarea>내에서 줄바꿈을 할 수 있어야 하므로,
@@ -135,13 +132,23 @@ export class ItemDetailComponent implements OnInit, OnDestroy, OnChanges {
     // this.item = Object.assign({}, this.item, { text: ref.value });
     this.displayItem.text = ref.value;
 
-    this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(this.ui.getClone({ isEditText: false })));
+    this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(
+      this.ui.getClone({ isEditText: false })));
 
-    this.http.put(SysConf.UPDATE_ITEM + '?' +
-                  'key=' + this.aService.getToken()
-                  , { _id: this.displayItem._id,
-                      text: this.displayItem.text,
-                      checkbox_list: { title: 'test', list: [{ id: 'test', isChecked: false }] } })
+    this.http.put(
+      SysConf.UPDATE_ITEM + '?' +
+      'key=' + this.aService.getToken(),
+      {
+        _id: this.displayItem._id,
+        text: this.displayItem.text,
+        checkbox_list: {
+          title: 'test',
+          list: [{
+            id: 'test',
+            isChecked: false
+          }]
+        }
+      })
     .subscribe(obs => {
       // console.log(JSON.stringify(obs));
       this.store.dispatch(new ItemDetailRedux.ModifyAct(this.displayItem));
@@ -153,10 +160,17 @@ export class ItemDetailComponent implements OnInit, OnDestroy, OnChanges {
   saveTitle($event) {
     if ($event['key'] === 'Enter') {
       this.displayItem.title = $event.target.value;
-      this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(this.ui.getClone({ isEditTitle: false })));
-      this.http.put(SysConf.UPDATE_ITEM + '?' +
-                    'key=' + this.aService.getToken(),
-                    { _id: this.displayItem._id, title: this.displayItem.title })
+
+      this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(
+        this.ui.getClone({ isEditTitle: false })));
+
+      this.http.put(
+        SysConf.UPDATE_ITEM + '?' +
+        'key=' + this.aService.getToken(),
+        {
+          _id: this.displayItem._id,
+          title: this.displayItem.title
+        })
       .subscribe(obs => {
         // console.log(JSON.stringify(obs));
         this.store.dispatch(new ItemDetailRedux.ModifyAct(this.displayItem));
@@ -168,9 +182,13 @@ export class ItemDetailComponent implements OnInit, OnDestroy, OnChanges {
   receiveTagList(event) {
     // console.log($event);
     this.displayItem.tags = event;
-    this.http.put(SysConf.UPDATE_ITEM + '?' +
-                  'key=' + this.aService.getToken(),
-                  { _id: this.displayItem._id, tags: this.displayItem.tags })
+    this.http.put(
+      SysConf.UPDATE_ITEM + '?' +
+      'key=' + this.aService.getToken(),
+      {
+        _id: this.displayItem._id,
+        tags: this.displayItem.tags
+      })
     .subscribe(obs => {
       // console.log(obs);
       this.store.dispatch(new ItemDetailRedux.ModifyAct(this.displayItem));
@@ -184,14 +202,101 @@ export class ItemDetailComponent implements OnInit, OnDestroy, OnChanges {
     this.network.getFast({
         project_id: this.displayItem.project_id,
         tags: this.displayItem.tags
-      }
-    )
+      })
     .subscribe(obs => {
         // console.log(obs);
         // this.fastList = obs;
         this.store.dispatch(new FastRedux.AddAct(obs));
       }
     );
+  }
+
+  // -----------------------------------------------------------------------
+  // 차일드 컴포넌트용 리덕스, 네트워크 컨트롤 함수
+  // -----------------------------------------------------------------------
+
+  handleNewItem = (item: ICheckbox) => {
+    // console.log(`handleNewItem() on!!`);
+    const LIST = {
+      list: [...this.displayItem.checkbox_list.list, item]
+    };
+
+    const CHECKBOX_LIST = {
+      checkbox_list: Object.assign(
+        {},
+        this.displayItem.checkbox_list,
+        LIST)
+    };
+
+    this.http.put(
+      SysConf.UPDATE_ITEM + '?' +
+      'key=' + this.aService.getToken(),
+      Object.assign({}, { _id: this.displayItem._id }, CHECKBOX_LIST))
+    .subscribe(obs => {
+        // console.log(JSON.stringify(obs));
+        if (obs['ok'] === 1) {
+          this.store.dispatch(new ItemDetailRedux.NewCheckBoxItem(item));
+        } else {
+          this.store.dispatch(new ItemDetailRedux.CancelAct());
+        }
+    });
+  }
+
+  handleModifyItem = (item: ICheckbox) => {
+    // console.log(`handleModifyItem() on!!`);
+    const LIST = { list: [...this.displayItem.checkbox_list.list.map(value => {
+        return value.id === item.id ? item : value;
+      })] };
+
+    const CHECKBOX_LIST = {
+      checkbox_list: Object.assign({}, this.displayItem.checkbox_list, LIST)
+    };
+
+    const QUERY = Object.assign({}, { _id: this.displayItem._id }, CHECKBOX_LIST);
+
+    this.http.put(
+        SysConf.UPDATE_ITEM + '?' +
+        'key=' + this.aService.getToken(),
+        QUERY)
+    .subscribe(obs => {
+        // console.log(JSON.stringify(obs));
+        if (obs['ok'] === 1) {
+            this.store.dispatch(new ItemDetailRedux.ModifyCheckBoxItem(item));
+        } else {
+            this.store.dispatch(new ItemDetailRedux.CancelAct());
+        }
+    });
+  }
+
+  handleRemoveItem = (item: ICheckbox) => {
+    const LIST =  {
+      list: [...this.displayItem.checkbox_list.list
+        .filter(value => {
+          return value.id !== item.id;
+        })]
+    };
+
+    const CHECKBOX_LIST = {
+      checkbox_list: Object.assign(
+        {},
+        this.displayItem.checkbox_list,
+        LIST)
+    };
+
+    const QUERY = Object.assign({}, { _id: this.displayItem._id }, CHECKBOX_LIST);
+
+    this.http.put(
+      SysConf.UPDATE_ITEM + '?' +
+      'key=' + this.aService.getToken(),
+      QUERY)
+    .subscribe(obs => {
+      // console.log(JSON.stringify(obs));
+      if (obs['ok'] === 1) {
+        this.store.dispatch(new ItemDetailRedux.RemoveCheckBoxItem(item));
+      } else {
+        this.store.dispatch(new ItemDetailRedux.CancelAct());
+      }
+    });
   }
 
   // -----------------------------------------------------------------------
@@ -206,7 +311,12 @@ export class ItemDetailComponent implements OnInit, OnDestroy, OnChanges {
 
   // 빈 공간을 클릭했을 시에 발생하는 이벤트 처리.
   focusOutManage($event) {
-    this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(this.ui.getClone({ isEditText: false, isEditTitle: false })));
+    this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(
+      this.ui.getClone(
+        {
+          isEditText: false,
+          isEditTitle: false
+        })));
     this.clickEvent($event);
   }
 
@@ -217,27 +327,39 @@ export class ItemDetailComponent implements OnInit, OnDestroy, OnChanges {
 
   private clickedTitle(evnet) {
     event.stopPropagation();
-    this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(this.ui.getClone({ isEditText: false, isEditTitle: true })));
+    this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(
+      this.ui.getClone(
+        {
+          isEditText: false,
+          isEditTitle: true
+        })));
     setTimeout(() => this.title.nativeElement.focus(), 0);
     this.clickEvent(event);
   }
 
   private clickedText(event) {
     event.stopPropagation();
-    this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(this.ui.getClone({ isEditText: true, isEditTitle: false })));
+    this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(
+      this.ui.getClone(
+        {
+          isEditText: true,
+          isEditTitle: false
+        })));
     setTimeout(() => this.textArea.nativeElement.focus(), 0);
     this.clickEvent(event);
   }
 
   private clickedEditingTitle(event) {
     event.stopPropagation();
-    this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(this.ui.getClone({ isEditText: false })));
+    this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(
+      this.ui.getClone({ isEditText: false })));
     this.clickEvent(event);
   }
 
   private clickedEditingText(event) {
     event.stopPropagation();
-    this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(this.ui.getClone({ isEditTitle: false })));
+    this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(
+      this.ui.getClone({ isEditTitle: false })));
     this.clickEvent(event);
   }
 

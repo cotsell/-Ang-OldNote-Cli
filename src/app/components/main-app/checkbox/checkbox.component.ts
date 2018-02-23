@@ -82,6 +82,16 @@ export class CheckboxComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
+  removeCheckBoxItem(event) {
+    event.stopPropagation();
+    this.outputRemoveCheckBox(this.displayCheckbox);
+  }
+
+  stopEventBubbling(event) {
+    event.stopPropagation();
+    // console.log(event);
+  }
+
   ngOnDestroy() {
 
   }
