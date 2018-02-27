@@ -22,8 +22,10 @@
 
     <div>
       <div 
+        id="checkbox_text"
         [hidden]="isEditText"
         (click)="changeIsEditText($event)"
+        [style.text-decoration]="displayCheckbox.isChecked ? 'line-through' : 'none'"
       >
         {{ displayCheckbox?.text }}
       </div>

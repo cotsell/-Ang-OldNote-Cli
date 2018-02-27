@@ -40,7 +40,7 @@
   <!-- 미니메뉴 버튼 -->
   <div
     #menu_button
-    [hidden]="true" 
+    [hidden]="isMinimenuHidden" 
     id="hide_menu"
     (click)="controlLayer($event, menu_layer)"
   >

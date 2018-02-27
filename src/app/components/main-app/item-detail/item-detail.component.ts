@@ -83,7 +83,7 @@ export class ItemDetailComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnInit() {
-    console.log(`Item-Detail ngOnItit()`);
+    // console.log(`Item-Detail ngOnItit()`);
     // 리덕스에 컴포넌트의 UI를 생성.
     this.store.dispatch(new ComponentUiReducer.AddComponentAct(this.ui.value));
     this.uiSubscriptions = this.store.select(StoreInfo.getComponentUi)
@@ -140,14 +140,7 @@ export class ItemDetailComponent implements OnInit, OnDestroy, OnChanges {
       'key=' + this.aService.getToken(),
       {
         _id: this.displayItem._id,
-        text: this.displayItem.text,
-        checkbox_list: {
-          title: 'test',
-          list: [{
-            id: 'test',
-            isChecked: false
-          }]
-        }
+        text: this.displayItem.text
       })
     .subscribe(obs => {
       // console.log(JSON.stringify(obs));
