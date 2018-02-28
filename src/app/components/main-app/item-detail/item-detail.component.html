@@ -2,7 +2,10 @@
   
   <!-- toolbar -->
   <div id="toolbar_grid">
-    <app-toolbar></app-toolbar>
+    <app-toolbar
+      [subjectId]="displayItem?.subject_id"
+      >
+    </app-toolbar>
   </div>
 
   <!-- Fast Mini List -->
@@ -44,6 +47,7 @@
           </a>
       </div>
     </div>
+
     <!-- Textarea -->
     <div>
       <!-- 내용 수정 화면 -->
@@ -58,8 +62,12 @@
             [value]="displayItem?.text ? displayItem.text : ''"
             (click)="clickedEditingText($event)"
             ></textarea><br>
-          <button class="save_button"
-                  (click)="saveText(MyTextarea)">Save</button>
+          <button 
+            class="save_button"
+            (click)="saveText(MyTextarea)"
+            >
+            Save
+          </button>
         </form>
       </div>
       <!-- 내용 기본 화면 -->

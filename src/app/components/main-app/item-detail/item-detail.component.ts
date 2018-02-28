@@ -34,7 +34,7 @@ class UI {
 @Component({
   selector: 'app-item-detail',
   templateUrl: './item-detail.component.html',
-  styleUrls: ['./item-detail.component.css']
+  styleUrls: ['./item-detail.component.scss']
 })
 export class ItemDetailComponent implements OnInit, OnDestroy, OnChanges {
   tags:             string[]          = []; // 사용 용도 불명;;

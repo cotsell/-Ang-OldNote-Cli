@@ -96,9 +96,10 @@ export class ProjectComponent implements OnInit, OnDestroy {
       this.project.writer_id = this.aService.getUserInfo().id;
       this.project.title = $event.target.value;
       this.isEditable = false;
-      this.http.post(SysConf.INSERT_PROJECT + '?' +
-                      'key=' + this.aService.getToken(),
-                    this.project)
+      this.http.post(
+        SysConf.INSERT_PROJECT + '?' +
+        'key=' + this.aService.getToken(),
+        this.project)
       .subscribe(obs => {
         // console.log(obs);
         this.store.dispatch(new Reducers.project.AddAct(obs));

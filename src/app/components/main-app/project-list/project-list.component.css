@@ -1,7 +1,24 @@
 #main_grid {
-    display: grid;
+    display: none;
     height: 100%;
     width: 100%; 
     grid-template-columns: 1fr;
 }
 
+
+@media all and (max-width: 320px) {
+
+}
+@media all and (min-width: 321px) and (max-width: 768px) {
+
+}
+
+@media all and (min-width: 769px) and (max-width: 1024px) {
+    #main_grid {
+        display: grid;
+    }
+}
+
+@media all and (min-width: 1025px) {
+
+}

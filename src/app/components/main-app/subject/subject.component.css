@@ -1,6 +1,6 @@
 #main_grid {
     display: grid;
-    grid-template-columns: 250px 40px 40px auto;
+    grid-template-columns: 250px 2rem 2rem auto;
     grid-template-rows: auto auto;
 }
 

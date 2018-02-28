@@ -4,27 +4,47 @@ $closeBackColor: black;
 
 .main_grid {
   display: grid;
-  grid-template-columns: 1rem auto 2rem;
+  grid-template-columns: 2rem auto 2rem;
+  grid-template-rows: 1.4rem;
   border-radius: 2px;
+  grid-gap: 0px;
+  margin: 0px;
 
   &:hover {
     background-color: $g_FontColor;
-  }
-
-}
-
-#close {
-  cursor: pointer;
-  &:hover {
-    background-color: $closeBackColor;
-    color: white;
   }
 }
 
 #checkbox_text {
   text-decoration: none;
+  margin: 0px;
+  height: 1.4rem;
+  // padding: 3px 1rem;
+}
+
+#checkbox_text_div {
+  margin: 0px;
+  height: 1.4rem;
+}
+
+#checkbox_div {
+  margin: auto;
 }
 
 input[type="checkbox"] {
   display: inline-block;
+}
+
+#close {
+  height: 1.4rem;
+  width: 2rem;
+  margin: auto;
+  cursor: pointer;
+  font-size: 1rem;
+  align-content: center;
+  border-radius: 2px;
+  &:hover {
+    background-color: $closeBackColor;
+    color: white;
+  }
 }

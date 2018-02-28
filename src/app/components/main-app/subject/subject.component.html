@@ -8,14 +8,15 @@
   *ngIf="isNewMode === false"
   (mouseover)="showMiniMenuButton()"
   (mouseout)="hideMiniMenuButton()"
-  >
+>
 
   <!-- 서브젝트 타이틀 -->
   <div id="title_div">
     <div 
       id="title"
       *ngIf="isEditTitle === false"
-      (click)="isEditTitle = true">
+      (click)="isEditTitle = true"
+    >
       {{ subject?.title }}
     </div>
     <div *ngIf="isEditTitle === true">
@@ -23,12 +24,32 @@
           type="text"
           [value]="subject?.title"
           (focusout)="isEditTitle=false;"
-          (keypress)="saveTitle($event)">
+          (keypress)="saveTitle($event)"
+        >
     </div>
   </div>
 
   <!-- 접기 -->
-  <div id="arrow_div" onselectstart="return false"><i class="material-icons">keyboard_arrow_down</i></div>
+  <div>
+    <!-- isFolded가 false인 경우 -->
+    <div 
+      *ngIf="isFolded === false" 
+      id="arrow_div" 
+      onselectstart="return false"
+      (click)="changeIsFolded($event)"
+    >
+      <i class="material-icons">keyboard_arrow_up</i>
+    </div>
+    <!-- isFolded가 true인 경우 -->
+    <div
+      *ngIf="isFolded === true"
+      id="arrow_div"
+      onselectstart="return false"
+      (click)="changeIsFolded($event)"
+      >
+        <i class="material-icons">keyboard_arrow_down</i>
+    </div>
+  </div>
 
   <!-- 미니 메뉴 -->
   <div id="menu_div">
@@ -44,23 +65,28 @@
 
   <!-- 아이템 리스트 -->
   <div id="item_list_div">
-    <div 
-      *ngFor="let item of itemList"
-      style="display: inline-block;">
-      <app-item 
-        [item]="item" 
-        [order]="orderChild" 
-        (output)="receiveOutput($event)">
-      </app-item>
-    </div>
-    <!-- 새로운 아이템 입력하기 -->
-    <div style="display: inline-block;">
-      <app-item 
-        [isNewItem]="true" 
-        [projectId]="projectId" 
-        [subject]="subject" 
-        (output)="receiveOutput($event)">
-      </app-item>
+    <div *ngIf="isFolded === false">
+      <div 
+        *ngFor="let item of itemList"
+        style="display: inline-block;"
+        >
+        <app-item 
+          [item]="item" 
+          [order]="orderChild" 
+          (output)="receiveOutput($event)"
+          >
+        </app-item>
+      </div>
+      <!-- 새로운 아이템 입력하기 -->
+      <div style="display: inline-block;">
+        <app-item 
+          [isNewItem]="true" 
+          [projectId]="projectId" 
+          [subject]="subject" 
+          (output)="receiveOutput($event)"
+          >
+        </app-item>
+      </div>
     </div>
   </div>
 </div>

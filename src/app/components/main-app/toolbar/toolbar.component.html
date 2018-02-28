@@ -6,14 +6,23 @@
   </div>
 
   <!-- 프로젝트 이름 -->
-  <div id="project">
+  <div
+    *ngIf="projectId !== undefined" 
+    id="project"
+    >
     <app-project
       [projectId]="projectId"
       [isEditable]="true">
-      <!--
-      [order]="orderChild"
-      (output)="receiveRequest($event)"> -->
     </app-project>
+  </div>
+
+  <!-- 서브젝트 이름 -->
+  <div
+    *ngIf="subjectId !== undefined"
+    >
+    <app-subject>
+      
+    </app-subject>
   </div>
 
   <!-- 타이틀 -->

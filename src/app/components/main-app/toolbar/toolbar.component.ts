@@ -13,6 +13,7 @@ import { SysConf } from '../../../service/sysConfig';
 })
 export class ToolbarComponent implements OnInit {
 @Input() projectId: string;
+@Input() subjectId: string;
 
 @Input() order: EventEmitter<any>;
 @Output() output: EventEmitter<any> = new EventEmitter();

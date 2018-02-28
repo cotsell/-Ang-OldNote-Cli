@@ -30,6 +30,7 @@ export class MinimenuComponent implements OnInit, OnDestroy {
     @Input() object:                What;
     @Input() order:                 EventEmitter<IOrderMsg>;
     private minimenuUiSubscription: Subscription;
+    private orderSubscription:      Subscription;
     private uiState:                IUiState;
 
     @ViewChild('menu_layer')    menuLayer:  ElementRef;
@@ -56,7 +57,7 @@ export class MinimenuComponent implements OnInit, OnDestroy {
 
 
         // 부모로부터 받을 명령을 구독합니다.
-        this.order.subscribe(obs => {
+        this.orderSubscription = this.order.subscribe(obs => {
             // console.log(obs);
             switch (obs.request) {
                 case SysConf.CLICK_EVENT :
@@ -116,6 +117,9 @@ export class MinimenuComponent implements OnInit, OnDestroy {
         this.store.dispatch(new MiniMenuAct.RemoveMiniMenuAct(this.uiState));
         if (this.minimenuUiSubscription !== undefined) {
             this.minimenuUiSubscription.unsubscribe();
+        }
+        if (this.orderSubscription !== undefined) {
+            this.orderSubscription.unsubscribe();
         }
     }
 }

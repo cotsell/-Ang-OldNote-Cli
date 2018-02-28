@@ -74,7 +74,7 @@ export function Reducer(state = init, action) {
       }
       return state.map(value => {
         return value.id === action.payload.id ?
-                Object.assign({}, value, { state: { menuHidden: true } }) : value;
+          Object.assign({}, value, { state: { menuHidden: true } }) : value;
       });
 
     case CLOSE_ALL_MINIMENU:

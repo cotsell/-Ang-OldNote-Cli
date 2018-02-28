@@ -1,6 +1,9 @@
+@import '../../../../styles';
+
 #main_grid {
     display: grid;
-    grid-template-columns: 1fr 768px 1fr;
+    // grid-template-columns: 1fr 768px 1fr;
+    grid-template-columns: 1fr $g_padSize 1fr;
     grid-template-rows: 40px 1fr;
     background-color: #e6e6e6;
     height: 100%;
@@ -39,18 +42,9 @@
     margin: 0px;
     padding: 0px;
     min-height: 200px;
-    width: 450px;
+    width: $g_padSize * 0.9;
+    box-sizing: border-box;
     color: #4d4d4d;
-}
-
-#text_area {
-    border: 0px solid #4d4d4d;
-    margin: 0px;
-    padding: 0px;
-    min-height: 200px;
-    width: 450px;
-    /* white-space는 pre의 자동 줄바꿈을 지원해주는 속성. */
-    white-space: pre-wrap;
 }
 
 .save_button {

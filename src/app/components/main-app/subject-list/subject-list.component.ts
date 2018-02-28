@@ -100,9 +100,10 @@ export class SubjectListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     // this.store.dispatch(new Reducers.minimenuUi.RemoveAllMiniMenuAct());
-    this.store.dispatch(new Reducers.itemList.RemoveAllAct());
-    this.store.dispatch(new Reducers.subject.RemoveAllAct());
 
+    // 테스트 위해 임시 주석. 만약 itemList와 subjectList에 문제가 생기면 다시 해제
+    // this.store.dispatch(new Reducers.itemList.RemoveAllAct());
+    // this.store.dispatch(new Reducers.subject.RemoveAllAct());
 
     if (this.projectSubscription !== undefined) {
       this.projectSubscription.unsubscribe();
