@@ -13,6 +13,8 @@ $g_grayPalette: (
     10: #000000
 );
 
+$g_padSize: 768px;
+
 $g_FontColor: map-get($g_grayPalette, 7);
 $g_BackgroundColor: map-get($g_grayPalette, 1);
 
