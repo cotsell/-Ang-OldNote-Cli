@@ -22,106 +22,165 @@ import Reducers from '../../../service/redux/reducers';
 import * as Redux from '../../../service/redux/storeInfo';
 
 @Component({
-  selector: 'app-subject',
-  templateUrl: './subject.component.html',
-  styleUrls: ['./subject.component.css']
+    selector: 'app-subject',
+    templateUrl: './subject.component.html',
+    styleUrls: ['./subject.component.css']
 })
 export class SubjectComponent implements OnInit, OnDestroy {
-  @Input() projectId: string;
-  @Input() subject: Interface.ISubject = {};
-  @Input() isNewMode = false;
-  @Input() order: EventEmitter<Interface.IOrderMsg>;
-  @Input() isFolded = false; // 서브젝트를 접을 것인가
-  @Output() output: EventEmitter<any> = new EventEmitter();
-  private itemList: Interface.IItem[];
-  private orderChild: EventEmitter<Interface.IOrderMsg> = new EventEmitter();
-  private isEditTitle = false;
-  private itemListSubscription: Subscription;
+    @Input() projectId: string;
+    // @Input() subject: Interface.ISubject = {};
+    @Input()
+    set subjectId(value: string) {
+        this._subjectId = value;
+        this.subscribeSubject(value);
+    }
+    get subjectId() {
+        return this._subjectId;
+    }
+    @Input() isNewMode      = false; // 리스트에서 새로운 값을 입력받기 전에 대기 모드 출력.
+    @Input() isToolbarMode  = false; // 툴바에 간이 기능 제공할 지 결정.
+    @Input() isFolded       = false; // 서브젝트를 접을 것인지 결정.
+    @Input() order:         EventEmitter<Interface.IOrderMsg>;
+    @Output() output:       EventEmitter<any> = new EventEmitter();
 
-  constructor(
-    private http: HttpClient,
-    private aService: AccountService,
-    private store: Store<Redux.StoreInfo>) { }
+    private isEditTitle = false;
+    private subject:              Interface.ISubject = {};
+    private _subjectId:           string;
+    private itemList:             Interface.IItem[];
+    private orderChild:           EventEmitter<Interface.IOrderMsg> = new EventEmitter();
+    private subjectSubscription:  Subscription;
+    private itemListSubscription: Subscription;
 
-  ngOnInit() {
-    if (this.order !== undefined && this.order !== null) {
-      this.order.subscribe(obs => {
-        // console.log(obs);
-        this.clickEvent(obs);
-      });
+    constructor(
+        private http: HttpClient,
+        private aService: AccountService,
+        private store: Store<Redux.StoreInfo>) { }
+
+    ngOnInit() {
+        this.subscribeEventFromParent();
     }
 
-    this.store.select(Redux.getItemList)
-      .subscribe(obs => {
-        this.itemList = obs.filter(value => {
-          return this.subject._id === value.subject_id;
+    // 화면에서 서브젝트의 타이틀을 변경할 때 사용되는 함수에요.
+    saveTitle($event) {
+        if ($event['key'] === 'Enter') {
+            console.log($event);
+            this.subject.title = $event.target.value;
+            this.isEditTitle = false;
+            this.http.put(
+                SysConf.UPDATE_SUBJECT + '?' +
+                'key=' + this.aService.getToken(),
+                { _id: this.subject._id, title: this.subject.title })
+            .subscribe(obs => {
+                console.log(obs);
+                this.store.dispatch(new Reducers.subject.ModifyAct(this.subject));
+            });
+        }
+    }
+
+    // TODO 삭제예정
+    receiveOutput($event) {
+        this.output.emit($event);
+    }
+
+    focusOn($event) {
+        $event.focus();
+    }
+
+    // 서버로 새로운 Subject를 생성하기위해 전송해요.
+    sendNewSubject($event) {
+        if ($event['key'] === 'Enter') {
+            this.isEditTitle = false;
+            this.subject.project_id = this.projectId;
+            this.subject.writer_id = this.aService.getUserInfo().id;
+            this.subject.title = $event.target.value;
+
+            this.http.post(
+                SysConf.INSERT_SUBJECT + '?' +
+                'key=' + this.aService.getToken(),
+                this.subject)
+                .subscribe(obs => {
+                    console.log(obs);
+                    this.store.dispatch(new Reducers.subject.AddAct(obs));
+                });
+        }
+    }
+
+    // isFolded의 상태를 반대 상태로 변경해줘요.
+    changeIsFolded(event) {
+        event.stopPropagation();
+        this.isFolded = !this.isFolded;
+    }
+
+    // isEditTitle의 상태를 주어진 상태로 변경해줘요.
+    changeIsEditTitle(event, type) {
+        event.stopPropagation();
+        this.isEditTitle = type;
+    }
+
+    clickEvent(event: Interface.IOrderMsg) {
+        this.orderChild.emit({ request: event.request, object: event.object });
+    }
+
+    showMiniMenuButton() {
+        this.orderChild.emit({ request: SysConf.SHOW_MINI_MENU_BUTTON });
+    }
+
+    hideMiniMenuButton() {
+        this.orderChild.emit({ request: SysConf.HIDE_MINI_MENU_BUTTON });
+    }
+
+    // 부모로부터 받은 EventEmitter를 구독해요.
+    // ClickEvent라던지, mouseOver등의 이벤트들 이에요.
+    private subscribeEventFromParent() {
+        if (this.order !== undefined && this.order !== null) {
+        this.order.subscribe(obs => {
+            // console.log(obs);
+            this.clickEvent(obs);
         });
-      });
-  }
-
-  // 화면에서 서브젝트의 타이틀을 변경할 때 사용되는 함수.
-  saveTitle($event) {
-    if ($event['key'] === 'Enter') {
-      console.log($event);
-      this.subject.title = $event.target.value;
-      this.isEditTitle = false;
-      this.http.put(SysConf.UPDATE_SUBJECT + '?' +
-                    'key=' + this.aService.getToken(),
-                    { _id: this.subject._id, title: this.subject.title })
-      .subscribe(obs => {
-        console.log(obs);
-        this.store.dispatch(new Reducers.subject.ModifyAct(this.subject));
-      });
+        }
     }
-  }
 
-  // TODO 삭제예정
-  receiveOutput($event) {
-    this.output.emit($event);
-  }
+    // 리덕스의 SubjectList를 구독해요.
+    private subscribeSubject(subjectId: string) {
+        if (subjectId !== undefined &&
+            subjectId !== null &&
+            subjectId !== '') {
+            this.unSubscribe(this.subjectSubscription);
+            this.subjectSubscription = this.store.select(Redux.getSubjectList)
+                .subscribe(obs => {
+                    this.subject = obs.find(value => {
+                        return value._id === subjectId;
+                    });
 
-  focusOn($event) {
-    $event.focus();
-  }
+                    // subjectList가 구독되고 나서 ItemList가 구독되어야 순서가 맞으므로..
+                    this.subscribeItemList(subjectId);
 
-  sendNewSubject($event) {
-    if ($event['key'] === 'Enter') {
-      this.isEditTitle = false;
-      this.subject.project_id = this.projectId;
-      this.subject.writer_id = this.aService.getUserInfo().id;
-      this.subject.title = $event.target.value;
-
-      this.http.post(SysConf.INSERT_SUBJECT + '?' +
-                      'key=' + this.aService.getToken(),
-                      this.subject)
-      .subscribe(obs => {
-        console.log(obs);
-        this.store.dispatch(new Reducers.subject.AddAct(obs));
-      });
+                });
+        }
     }
-  }
 
-  changeIsFolded(event) {
-    event.stopPropagation();
-    this.isFolded = !this.isFolded;
-  }
-
-  clickEvent(event: Interface.IOrderMsg) {
-    this.orderChild.emit({ request: event.request, object: event.object });
-  }
-
-  showMiniMenuButton() {
-    this.orderChild.emit({ request: SysConf.SHOW_MINI_MENU_BUTTON });
-  }
-
-  hideMiniMenuButton() {
-    this.orderChild.emit({ request: SysConf.HIDE_MINI_MENU_BUTTON });
-  }
-
-  ngOnDestroy() {
-    // this.store.dispatch(new Reducers.itemList.RemoveAllAct());
-    if (this.itemListSubscription !== undefined) {
-      this.itemListSubscription.unsubscribe();
+    // 리덕스의 ItemList를 구독해요.
+    private subscribeItemList(subjectId: string) {
+        this.unSubscribe(this.itemListSubscription);
+        this.itemListSubscription = this.store.select(Redux.getItemList)
+            .subscribe(obs => {
+                this.itemList = obs.filter(value => {
+                return subjectId === value.subject_id;
+                });
+            });
     }
-  }
+
+    // 파워 구독 해제!!
+    private unSubscribe(subscription: Subscription) {
+        if (subscription !== undefined && subscription !== null) {
+            subscription.unsubscribe();
+        }
+    }
+
+    // 포풍 파괴!!
+    ngOnDestroy() {
+        // this.store.dispatch(new Reducers.itemList.RemoveAllAct());
+        this.unSubscribe(this.subjectSubscription);
+        this.unSubscribe(this.itemListSubscription);
+    }
 }

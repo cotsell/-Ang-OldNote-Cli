@@ -1,11 +1,12 @@
 <!-- @Input: isNewMode,  -->
 <!-- isNewMode : 새로운 서브젝트 입력 용도인지 구분. -->
 <!-- isEditTitle : 타이틀 입력이 수정 중인지 아닌지 구분. -->
+<!-- isToolbarMode : 툴바에 사용되는 최소한의 타이틀 출력과 수정 기능만 제공. -->
 
 <!-- 기본 서브젝트 출력 화면 -->
 <div 
   id="main_grid"
-  *ngIf="isNewMode === false"
+  *ngIf="isNewMode === false && isToolbarMode === false"
   (mouseover)="showMiniMenuButton()"
   (mouseout)="hideMiniMenuButton()"
 >
@@ -111,5 +112,27 @@
       Input New Subject Title..
     </span>
   </div>
-
 </div>
+
+<!-- 툴바에 출력되는 최소 기능 모드 -->
+<div
+  *ngIf="isToolbarMode === true"
+  >
+  <div 
+    id="title"
+    *ngIf="isEditTitle === false"
+    (click)="changeIsEditTitle($event, true)"
+    >
+    {{ subject?.title }}
+  </div>
+  <div *ngIf="isEditTitle === true">
+    <input 
+      type="text"
+      [value]="subject?.title"
+      (focusout)="changeIsEditTitle($event, false)"
+      (keypress)="saveTitle($event)"
+      >
+  </div>
+</div>
+
+

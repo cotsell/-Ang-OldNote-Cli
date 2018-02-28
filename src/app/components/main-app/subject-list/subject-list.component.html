@@ -23,8 +23,7 @@
       id="subject_list_div"
       *ngFor="let subject of subjectList">
       <app-subject
-        [subject]="subject"
-        [projectId]="projectId"
+        [subjectId]="subject?._id"
         [order]="orderChild"
         (output)="receiveOutput($event)">
       </app-subject>

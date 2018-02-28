@@ -26,7 +26,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log(`ProjectList ngOnInit()`);
+    // console.log(`ProjectList ngOnInit()`);
     this.projectListSubscription = this.store.select(getProjectList).subscribe(obs => {
       this.projectList = obs;
     });
