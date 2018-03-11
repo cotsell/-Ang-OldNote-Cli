@@ -4,13 +4,6 @@
         <app-toolbar></app-toolbar>
     </div>
     
-    <!-- <div *ngFor="let project of projectList" style="display:inline-block;" >
-      <app-project  [project] = "project"
-                    [isEditable]="false"
-                    (output)="receiveRequest($event)"
-                    [order]="orderChild"
-                    ></app-project>
-    </div> -->
     <div *ngFor="let project of projectList" style="display:inline-block;" >
       <app-project  
         [projectId]="project._id"
@@ -20,8 +13,13 @@
         >
       </app-project>
     </div>
+    
     <div style="display:inline-block;">
-      <app-project [isNewMode]="true" (output)="receiveRequest($event)"></app-project>
+      <app-project 
+        [isNewMode]="true" 
+        (output)="receiveRequest($event)"
+        >
+      </app-project>
     </div>
   </div>
 </div>

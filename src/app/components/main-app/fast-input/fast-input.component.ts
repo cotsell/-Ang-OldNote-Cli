@@ -8,7 +8,7 @@ import { SysConf } from '../../../service/sysConfig';
 @Component({
   selector: 'app-fast-input',
   templateUrl: './fast-input.component.html',
-  styleUrls: ['./fast-input.component.css']
+  styleUrls: ['./fast-input.component.scss']
 })
 export class FastInputComponent implements OnInit {
   @ViewChild('text') textArea: ElementRef;

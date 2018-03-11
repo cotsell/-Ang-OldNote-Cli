@@ -3,7 +3,7 @@
 #main_grid {
     display: grid;
     // grid-template-columns: 1fr 768px 1fr;
-    grid-template-columns: 1fr $g_padSize 1fr;
+    grid-template-columns: 1fr $g_mediaTablet 1fr;
     grid-template-rows: 40px 1fr;
     background-color: #e6e6e6;
     height: 100%;
@@ -42,7 +42,7 @@
     margin: 0px;
     padding: 0px;
     min-height: 200px;
-    width: $g_padSize * 0.9;
+    width: $g_mediaTablet * 0.9;
     box-sizing: border-box;
     color: #4d4d4d;
 }
@@ -58,10 +58,10 @@
     font-size: 16px;
     text-align: center;
     transition-duration: 0.3s;
-}
 
-.save_button:hover {
-    background-color: #d9d9d9;
+    &:hover {
+        background-color: #d9d9d9;
+    }
 }
 
 .test {

@@ -1,0 +1,27 @@
+@import '../../../../styles';
+
+#main_grid {
+    display: none;
+    height: 100%;
+    width: 100%; 
+    grid-template-columns: 1fr;
+}
+
+
+@media (max-width: $g_mediaMobile) {
+    
+}
+
+@media (min-width: $g_mediaTablet) {
+    #main_grid {
+        display: grid;
+    }
+}
+
+@media (min-width: $g_mediaLaptop) {
+
+}
+
+@media (min-width: $g_mediaDesktop) {
+
+}
