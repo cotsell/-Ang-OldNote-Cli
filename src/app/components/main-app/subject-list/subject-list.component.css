@@ -1,7 +1,7 @@
 #main_grid {
     display: grid;
     grid-template-columns: 250px 1fr 20px;
-    grid-template-rows: 2rem 1fr;
+    grid-template-rows: max-content 1fr;
     width: 100%;
     height: 100%;
     background-color: #e6e6e6;
@@ -16,5 +16,5 @@
 }
 
 #subject_list_div {
-    margin-bottom: 10px;
+    margin-bottom: 4rem;
 }

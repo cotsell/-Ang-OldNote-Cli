@@ -1,0 +1,48 @@
+// .round_div {
+//     border-radius: 6px;
+//     border: 1px solid #7fc697;
+//     background-color: #7fc697;
+//     width: 200px;
+//     height: 50px;
+//     margin: 10px;
+//     padding: 5px;
+// }
+
+.left_label {
+    display: inline-block;
+    border: none;
+    // border-left: 3px solid #7fc697;
+    // padding-left: 1rem;
+    // margin-right: 30px;
+    // margin-bottom: 30px;
+    a {
+        &:link {
+            text-decoration: none;
+            color: black;
+            cursor: pointer;
+        }
+        &:visited {
+            text-decoration: none;
+            color: black;
+            cursor: pointer;
+        }
+        &:active {
+            text-decoration: none;
+            color: black;
+            cursor: pointer;
+        }
+        &:hover {
+            text-decoration: none;
+            color: black;
+            cursor: pointer;
+        }
+    }
+}
+
+.red {
+    border-left-color: red;
+}
+
+#insert_msg {
+    color: gray;
+}

@@ -80,7 +80,7 @@ const route: Routes = [
     ReactiveFormsModule,
     HttpClientModule,
     StoreModule.forRoot(getReducers()),
-    StoreDevtoolsModule.instrument({ maxAge: 5 })
+    StoreDevtoolsModule.instrument({ maxAge: 25 })
   ],
   providers: [ AccountService, GaterService, NetworkService ],
   bootstrap: [ AppComponent ]

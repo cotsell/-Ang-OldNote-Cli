@@ -5,134 +5,141 @@
 
 <!-- 기본 서브젝트 출력 화면 -->
 <div 
-  id="main_grid"
-  *ngIf="isNewMode === false && isToolbarMode === false"
-  (mouseover)="showMiniMenuButton()"
-  (mouseout)="hideMiniMenuButton()"
->
-
-  <!-- 서브젝트 타이틀 -->
-  <div id="title_div">
-    <div 
-      id="title"
-      *ngIf="isEditTitle === false"
-      (click)="isEditTitle = true"
+    id="main_grid"
+    *ngIf="isNewMode === false && isToolbarMode === false"
+    (mouseover)="showMiniMenuButton()"
+    (mouseout)="hideMiniMenuButton()"
     >
-      {{ subject?.title }}
-    </div>
-    <div *ngIf="isEditTitle === true">
-        <input 
-          type="text"
-          [value]="subject?.title"
-          (focusout)="isEditTitle=false;"
-          (keypress)="saveTitle($event)"
-        >
-    </div>
-  </div>
 
-  <!-- 접기 -->
-  <div>
-    <!-- isFolded가 false인 경우 -->
-    <div 
-      *ngIf="isFolded === false" 
-      id="arrow_div" 
-      onselectstart="return false"
-      (click)="changeIsFolded($event)"
-    >
-      <i class="material-icons">keyboard_arrow_up</i>
+    <!-- 서브젝트 타이틀 -->
+    <div id="title_div">
+        <div id="icon">
+            <i class="fa fa-list-alt"></i>
+        </div>
+        <div 
+            id="title"
+            *ngIf="isEditTitle === false"
+            (click)="isEditTitle = true"
+            >
+            {{ subject?.title }}
+        </div>
+        <div *ngIf="isEditTitle === true">
+            <input 
+                type="text"
+                [value]="subject?.title"
+                (focusout)="isEditTitle=false;"
+                (keypress)="saveTitle($event)"
+                >
+        </div>
     </div>
-    <!-- isFolded가 true인 경우 -->
-    <div
-      *ngIf="isFolded === true"
-      id="arrow_div"
-      onselectstart="return false"
-      (click)="changeIsFolded($event)"
-      >
-        <i class="material-icons">keyboard_arrow_down</i>
+
+    <!-- 접기 -->
+    <div id="arrow_div">
+        <!-- isFolded가 false인 경우 -->
+        <div 
+            *ngIf="isFolded === false" 
+            id="arrow" 
+            onselectstart="return false"
+            (click)="changeIsFolded($event)"
+            >
+            <i class="material-icons">keyboard_arrow_up</i>
+        </div>
+        <!-- isFolded가 true인 경우 -->
+        <div
+            *ngIf="isFolded === true"
+            id="arrow"
+            onselectstart="return false"
+            (click)="changeIsFolded($event)"
+            >
+            <i class="material-icons">keyboard_arrow_down</i>
+        </div>
     </div>
-  </div>
 
-  <!-- 미니 메뉴 -->
-  <div id="menu_div">
-    <app-minimenu 
-      [object]="{ request: 'Subject', object: subject }"
-      [order]="orderChild"
-      (output)="receiveOutput($event)">
-    </app-minimenu>
-  </div>
-
-  <!-- 빈공간 -->
-  <div id="empty_space_div"></div>
-
-  <!-- 아이템 리스트 -->
-  <div id="item_list_div">
-    <div *ngIf="isFolded === false">
-      <div 
-        *ngFor="let item of itemList"
-        style="display: inline-block;"
-        >
-        <app-item 
-          [item]="item" 
-          [order]="orderChild" 
-          (output)="receiveOutput($event)"
-          >
-        </app-item>
-      </div>
-      <!-- 새로운 아이템 입력하기 -->
-      <div style="display: inline-block;">
-        <app-item 
-          [isNewItem]="true" 
-          [projectId]="projectId" 
-          [subject]="subject" 
-          (output)="receiveOutput($event)"
-          >
-        </app-item>
-      </div>
+    <!-- 미니 메뉴 -->
+    <div id="menu_div">
+        <app-minimenu 
+            [object]="{ request: 'Subject', object: subject }"
+            [order]="orderChild"
+            (output)="receiveOutput($event)"
+            >
+        </app-minimenu>
     </div>
-  </div>
+
+    <!-- 빈공간 -->
+    <div id="empty_space_div"></div>
+
+    <!-- 아이템 리스트 -->
+    <div id="item_list_div">
+        <div 
+            id="item_list_flex"
+            *ngIf="isFolded === false">
+            <div
+                class="item_article" 
+                *ngFor="let item of itemList"
+                >
+                <app-item 
+                    [item]="item" 
+                    [order]="orderChild" 
+                    (output)="receiveOutput($event)"
+                    >
+                </app-item>
+            </div>
+            <!-- 새로운 아이템 입력하기 -->
+            <div class="item_article">
+                <app-item 
+                    [isNewItem]="true" 
+                    [projectId]="projectId" 
+                    [subject]="subject" 
+                    (output)="receiveOutput($event)"
+                    >
+                </app-item>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- 새로운 서브젝트 입력 화면 -->
 <div 
-  id="new_mode_main_grid"
-  *ngIf="isNewMode === true">
-  <div *ngIf="isEditTitle">
-    <input 
-      #title
-      type="text"
-      (focusout)="isEditTitle=false;"
-      (keypress)="sendNewSubject($event)"
-      placeholder="Input New Subject Title..">
-    <template *ngIf="isEditTitle;then focusOn(title)"></template>
-  </div>
-  <div *ngIf="!isEditTitle">
-    <span 
-      id="insert_msg"
-      (click)="isEditTitle = true;">
-      Input New Subject Title..
-    </span>
-  </div>
+    id="new_mode_main_grid"
+    *ngIf="isNewMode === true"
+    >
+    <div *ngIf="isEditTitle">
+        <input 
+            #title
+            type="text"
+            (focusout)="isEditTitle=false;"
+            (keypress)="sendNewSubject($event)"
+            placeholder="Input New Subject Title.."
+            >
+        <template *ngIf="isEditTitle;then focusOn(title)"></template>
+    </div>
+    <div *ngIf="!isEditTitle">
+        <span 
+            id="insert_msg"
+            (click)="isEditTitle = true;"
+            >
+            Input New Subject Title..
+        </span>
+    </div>
 </div>
 
 <!-- 툴바에 출력되는 최소 기능 모드 -->
 <div
-  *ngIf="isToolbarMode === true"
-  >
-  <div 
-    id="title"
-    *ngIf="isEditTitle === false"
-    (click)="changeIsEditTitle($event, true)"
+    *ngIf="isToolbarMode === true"
     >
-    {{ subject?.title }}
-  </div>
-  <div *ngIf="isEditTitle === true">
-    <input 
-      type="text"
-      [value]="subject?.title"
-      (focusout)="changeIsEditTitle($event, false)"
-      (keypress)="saveTitle($event)"
-      >
-  </div>
+    <div 
+        id="title"
+        *ngIf="isEditTitle === false"
+        (click)="changeIsEditTitle($event, true)"
+        >
+        {{ subject?.title }}
+    </div>
+    <div *ngIf="isEditTitle === true">
+        <input 
+            type="text"
+            [value]="subject?.title"
+            (focusout)="changeIsEditTitle($event, false)"
+            (keypress)="saveTitle($event)"
+            >
+    </div>
 </div>
-
-

@@ -314,12 +314,13 @@ export class ItemDetailComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   // 자식 컴포넌트들에게 클릭이벤트 전달해요.
-  private clickEvent(event) {
+  clickEvent(event) {
     this.orderChild.emit({ request: SysConf.CLICK_EVENT, object: event });
   }
 
-  private clickedTitle(evnet) {
-    event.stopPropagation();
+  clickedTitle(evnet) {
+    if (event) { event.stopPropagation(); }
+
     this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(
       this.ui.getClone(
         {
@@ -330,8 +331,9 @@ export class ItemDetailComponent implements OnInit, OnDestroy, OnChanges {
     this.clickEvent(event);
   }
 
-  private clickedText(event) {
-    event.stopPropagation();
+  clickedText(event) {
+    if (event) { event.stopPropagation(); }
+    
     this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(
       this.ui.getClone(
         {
@@ -342,14 +344,14 @@ export class ItemDetailComponent implements OnInit, OnDestroy, OnChanges {
     this.clickEvent(event);
   }
 
-  private clickedEditingTitle(event) {
+  clickedEditingTitle(event) {
     event.stopPropagation();
     this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(
       this.ui.getClone({ isEditText: false })));
     this.clickEvent(event);
   }
 
-  private clickedEditingText(event) {
+  clickedEditingText(event) {
     event.stopPropagation();
     this.store.dispatch(new ComponentUiReducer.ModifyComponentAct(
       this.ui.getClone({ isEditTitle: false })));
@@ -359,7 +361,7 @@ export class ItemDetailComponent implements OnInit, OnDestroy, OnChanges {
   // -----------------------------------------------------------------------
   // MarkDown
   // -----------------------------------------------------------------------
-  private settingMakred() {
+  settingMakred() {
     marked.setOptions({
       renderer: new marked.Renderer(),
       gfm: true,
@@ -373,7 +375,7 @@ export class ItemDetailComponent implements OnInit, OnDestroy, OnChanges {
     });
   }
 
-  private parseMarkdownToHtml(text: string) {
+  parseMarkdownToHtml(text: string) {
     // const myRenderer = new marked.Renderer();
     // myRenderer.blockquote = function (value): string {
     //   return '<blockquote style="margin: 10px !important;">' + value + '</blockquote>';

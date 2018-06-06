@@ -1,7 +1,7 @@
 @import '../../../../styles';
 
 #main_grid {
-    display: none;
+    display: grid;
     height: 100%;
     width: 100%; 
     grid-template-columns: 1fr;

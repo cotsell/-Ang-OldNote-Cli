@@ -40,15 +40,15 @@ export class CheckboxListComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {}
 
-  private newCheckBox(event) {
+  newCheckBox(event) {
     this.newItemFunc(event);
   }
 
-  private modifyCheckBox(event) {
+  modifyCheckBox(event) {
     this.modifyItemFunc(event);
   }
 
-  private removeCheckBox(event) {
+  removeCheckBox(event) {
     this.removeItemFunc(event);
   }
 

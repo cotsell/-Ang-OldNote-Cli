@@ -1,5 +1,11 @@
 import * as Interface from '../Interface';
-import Reducers from './reducers';
+import { Reducer as ProjectList } from './reducers/projectListReducer';
+import { Reducer as SubjectList } from './reducers/subjectListReducer';
+import { Reducer as ItemList } from './reducers/itemListReducer';
+import { Reducer as ItemDetail } from './reducers/itemDetailReducer';
+import { Reducer as FastList } from './reducers/fastListReducer';
+import { Reducer as ComponentUi } from './reducers/componentUiReducer';
+import { Reducer as MiniMenu } from './reducers/minimenuUiReducer';
 
 export interface StoreInfo {
   projectList: Interface.IProject[];
@@ -13,15 +19,16 @@ export interface StoreInfo {
 }
 
 export function getReducers() {
-  return  { projectList: Reducers.project.Reducer,
-            subjectList: Reducers.subject.Reducer,
-            itemList: Reducers.itemList.Reducer,
-            itemDetail: Reducers.itemDetail.Reducer,
-            fastList: Reducers.fast.Reducer,
-            // ui: { minimenu: Reducers.minimenuUi.Reducer, component: Reducers.componentUi.Reducer }
-            componentUi: Reducers.componentUi.Reducer,
-            minimenuUi: Reducers.minimenuUi.Reducer,
-          };
+  return  { 
+    projectList: ProjectList,
+    subjectList: SubjectList,
+    itemList: ItemList,
+    itemDetail: ItemDetail,
+    fastList: FastList,
+    // ui: { minimenu: Reducers.minimenuUi.Reducer, component: Reducers.componentUi.Reducer }
+    componentUi: ComponentUi,
+    minimenuUi: MiniMenu,
+  };
 }
 
 export function getProjectList(state: StoreInfo): Interface.IProject[] {

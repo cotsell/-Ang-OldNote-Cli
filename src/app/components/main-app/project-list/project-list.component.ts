@@ -22,22 +22,26 @@ export class ProjectListComponent implements OnInit, OnDestroy {
 
   constructor(private aService: AccountService,
               private http: HttpClient,
-              public store: Store<StoreInfo>) {
+              private store: Store<StoreInfo>) {
   }
 
   ngOnInit() {
     // console.log(`ProjectList ngOnInit()`);
-    this.projectListSubscription = this.store.select(getProjectList).subscribe(obs => {
+    this.projectListSubscription = this.store.select(getProjectList)
+    .subscribe(obs => {
+      console.log(`ProjectList 구독 시작.`);
+      console.log(obs);
       this.projectList = obs;
     });
     this.loadProjectList();
   }
 
 
-  private loadProjectList() {
-    this.http.get<Interface.IProject[]>(SysConf.GET_PROJECT_LIST + '?' +
-                  'key=' + this.aService.getToken() + '&' +
-                  'id=' + this.aService.getUserInfo()['id'])
+  loadProjectList() {
+    this.http.get<Interface.IProject[]>(
+      SysConf.GET_PROJECT_LIST + '?' +
+      'key=' + this.aService.getToken() + '&' +
+      'id=' + this.aService.getUserInfo()['id'])
     .subscribe(obs => {
       // console.log(obs);
       if (obs !== undefined && obs.length > 0) {
@@ -46,7 +50,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
     });
   }
 
-  private receiveRequest($event) {
+  receiveRequest($event) {
     // console.log(`project-list.components.ts: receiveRequest(): ${ JSON.stringify($event) }`);
     if ($event['request'] === SysConf.GET_PROJECT_LIST_FROM_SERVER) {
       this.loadProjectList();
@@ -54,7 +58,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   }
 
   // 화면에 켜져있는 작은 메뉴들을 화면에서 숨겨주는 함수에요.
-  private clickEvent(event) {
+  clickEvent(event) {
     // this.orderChild.emit({ request: SysConf.CLOSE_LAYER, object: event });
     this.orderChild.emit({ request: SysConf.CLICK_EVENT, object: event });
     // console.log(`test`);

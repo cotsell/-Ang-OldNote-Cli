@@ -1,12 +1,13 @@
 <div>
     <!-- 새로운 아이템 입력 모드 -->
-    <div *ngIf="isNewItem === true"
+    <div 
+        *ngIf="isNewItem === true"
         class="left_label red">
         <!-- 입력하라고 멘트 출력 -->
         <div [hidden]="isInsertMode">
             <span 
-                (click)="isInsertMode = true"
                 id="insert_msg"
+                (click)="isInsertMode = true"
                 >
                 Insert New Item..
         </span>

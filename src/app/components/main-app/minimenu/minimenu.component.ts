@@ -25,13 +25,13 @@ export interface UiState {
 })
 export class MinimenuComponent implements OnInit, OnDestroy {
     @Input() pcMode = true; // 모바일 모드일때는 false 입력 필수.
-    private isMinimenuHidden:       boolean;
+    isMinimenuHidden:       boolean;
 
     @Input() object:                What;
     @Input() order:                 EventEmitter<IOrderMsg>;
-    private minimenuUiSubscription: Subscription;
-    private orderSubscription:      Subscription;
-    private uiState:                IUiState;
+    minimenuUiSubscription: Subscription;
+    orderSubscription:      Subscription;
+    uiState:                IUiState;
 
     @ViewChild('menu_layer')    menuLayer:  ElementRef;
     @ViewChild('menu_button')   menuButton: ElementRef;
